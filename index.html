@@ -578,22 +578,15 @@
                 <a href="#">Tulip<span class="submenu-arrow">▶</span></a>
                 <ul class="submenu">
                     <li><a href="#" onclick="showDeveloperProject(1, 1)">Tulip Crimson</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(1, 2)">Project 2</a></li>
+                    <li><a href="#" onclick="showDeveloperProject(1, 2)">Tulip Monsella 2</a></li>
                     <li><a href="#" onclick="showDeveloperProject(1, 3)">Project 3</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(1, 4)">Project 4</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(1, 5)">Project 5</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(1, 6)">Project 6</a></li>
                 </ul>
             </li>
             <li class="dropdown-submenu">
-                <a href="#">Developer 2 <span class="submenu-arrow">▶</span></a>
+                <a href="#">Adani<span class="submenu-arrow">▶</span></a>
                 <ul class="submenu">
-                    <li><a href="#" onclick="showDeveloperProject(2, 1)">Project 1</a></li>
+                    <li><a href="#" onclick="showDeveloperProject(2, 1)">Samsara Vilasa</a></li>
                     <li><a href="#" onclick="showDeveloperProject(2, 2)">Project 2</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(2, 3)">Project 3</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(2, 4)">Project 4</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(2, 5)">Project 5</a></li>
-                    <li><a href="#" onclick="showDeveloperProject(2, 6)">Project 6</a></li>
                 </ul>
             </li>
             <li class="dropdown-submenu">
@@ -1836,10 +1829,6 @@ const developerProjects = {
                 name: "Tulip Crimson", 
                 price: 43000000, 
                 location: "Sector-70, Gurgaon", 
-                size: 3090, 
-                bedrooms: 4, 
-                bathrooms: 4,
-                // NEW FIELDS ADDED (Lines 13-24)
                 about: "Luxury residential complex with modern amenities and green spaces. Strategically located with excellent connectivity to major business hubs.",
                 totalArea: "10 acres",
                 towers: 5,
@@ -1852,13 +1841,9 @@ const developerProjects = {
             },
             { 
                 id: 102, 
-                name: "Project 2", 
+                name: "Tulip Monsella", 
                 price: 8500000, 
                 location: "Gurgaon Sector 50", 
-                size: 1400, 
-                bedrooms: 2, 
-                bathrooms: 2,
-                // NEW FIELDS ADDED (Lines 32-43)
                 about: "Contemporary apartments designed for modern living with premium finishes and world-class amenities.",
                 totalArea: "12 acres",
                 towers: 6,
@@ -1867,17 +1852,13 @@ const developerProjects = {
                 flatAreas: ["1000 sq ft (2BHK)", "1400 sq ft (3BHK)"],
                 mapImage: "https://via.placeholder.com/600x400/FF9800/white?text=Project+2+Location+Map",
                 floorPlanImage: "https://via.placeholder.com/500x600/FF5722/white?text=Floor+Plan+Project+2",
-                brochureUrl: "#"
+                brochureUrl: "mages/Tulip Monsella-Brochure.pdf"
             },
             { 
                 id: 103, 
                 name: "Project 3", 
                 price: 15000000, 
                 location: "Gurgaon Sector 55", 
-                size: 2200, 
-                bedrooms: 4, 
-                bathrooms: 4,
-                // NEW FIELDS ADDED (Lines 51-62)
                 about: "Premium residential towers with panoramic city views and state-of-the-art facilities for discerning homebuyers.",
                 totalArea: "20 acres",
                 towers: 10,
@@ -1888,74 +1869,56 @@ const developerProjects = {
                 floorPlanImage: "https://via.placeholder.com/500x600/E91E63/white?text=Floor+Plan+Project+3",
                 brochureUrl: "#"
             },
-            { 
-                id: 104, 
-                name: "Project 4", 
-                price: 25000000, 
-                location: "Gurgaon Sector 60", 
-                size: 3500, 
-                bedrooms: 5, 
-                bathrooms: 5,
-                // NEW FIELDS ADDED (Lines 70-81)
-                about: "Ultra-luxury residential complex with exclusive penthouses and premium lifestyle amenities.",
-                totalArea: "25 acres",
-                towers: 5,
-                floors: 35,
-                totalFlats: 800,
-                flatAreas: ["2500 sq ft (4BHK)", "3500 sq ft (5BHK)", "4500 sq ft (Penthouse)"],
-                mapImage: "https://via.placeholder.com/600x400/795548/white?text=Project+4+Location+Map",
-                floorPlanImage: "https://via.placeholder.com/500x600/607D8B/white?text=Floor+Plan+Project+4",
-                brochureUrl: "#"
-            },
-            { 
-                id: 105, 
-                name: "Project 5", 
-                price: 9800000, 
-                location: "Gurgaon Sector 48", 
-                size: 1600, 
-                bedrooms: 3, 
-                bathrooms: 2,
-                // NEW FIELDS ADDED (Lines 89-100)
-                about: "Affordable luxury homes with smart home features and eco-friendly design elements.",
-                totalArea: "10 acres",
-                towers: 7,
-                floors: 18,
-                totalFlats: 850,
-                flatAreas: ["1200 sq ft (2BHK)", "1600 sq ft (3BHK)"],
-                mapImage: "https://via.placeholder.com/600x400/009688/white?text=Project+5+Location+Map",
-                floorPlanImage: "https://via.placeholder.com/500x600/00BCD4/white?text=Floor+Plan+Project+5",
-                brochureUrl: "#"
-            },
-            { 
-                id: 106, 
-                name: "Project 6", 
-                price: 18500000, 
-                location: "Gurgaon Sector 52", 
-                size: 2800, 
-                bedrooms: 4, 
-                bathrooms: 3,
-                // NEW FIELDS ADDED (Lines 108-119)
-                about: "Spacious apartments with modern architecture and comprehensive recreational facilities.",
-                totalArea: "18 acres",
-                towers: 9,
-                floors: 28,
-                totalFlats: 1350,
-                flatAreas: ["1800 sq ft (3BHK)", "2800 sq ft (4BHK)", "3200 sq ft (5BHK)"],
-                mapImage: "https://via.placeholder.com/600x400/8BC34A/white?text=Project+6+Location+Map",
-                floorPlanImage: "https://via.placeholder.com/500x600/CDDC39/white?text=Floor+Plan+Project+6",
-                brochureUrl: "#"
-            }
         ]
     },
-    2: {
-        name: "Developer 2",
+    2:{
+        name: "Adani",
         projects: [
-            { id: 201, name: "Project 1", price: 22000000, location: "Gurgaon Sector 65", size: 3200, bedrooms: 4, bathrooms: 4 },
-            { id: 202, name: "Project 2", price: 16500000, location: "Gurgaon Sector 70", size: 2400, bedrooms: 3, bathrooms: 3 },
-            { id: 203, name: "Project 3", price: 11200000, location: "Gurgaon Sector 75", size: 1900, bedrooms: 3, bathrooms: 2 },
-            { id: 204, name: "Project 4", price: 35000000, location: "Gurgaon Sector 80", size: 4500, bedrooms: 6, bathrooms: 6 },
-            { id: 205, name: "Project 5", price: 7800000, location: "Gurgaon Sector 42", size: 1300, bedrooms: 2, bathrooms: 2 },
-            { id: 206, name: "Project 6", price: 28500000, location: "Gurgaon Sector 85", size: 3800, bedrooms: 5, bathrooms: 4 }
+            { 
+                id: 201, 
+                name: "Samsara Vilasa", 
+                price: 43000000, 
+                location: "Sector-70, Gurgaon", 
+                about: "Luxury residential complex with modern amenities and green spaces. Strategically located with excellent connectivity to major business hubs.",
+                totalArea: "10 acres",
+                towers: 5,
+                floors: 36,
+                totalFlats: 720,
+                flatAreas: ["3090 sq ft (4BHK)"],
+                mapImage: "images/tulip crimson location map.jpg",
+                floorPlanImage: "images/tulip crimson floor plan.jpg",
+                brochureUrl: "images/Samsara Vilasa-Brochure.pdf"
+            },
+            { 
+                id: 102, 
+                name: "Tulip Monsella", 
+                price: 8500000, 
+                location: "Gurgaon Sector 50", 
+                about: "Contemporary apartments designed for modern living with premium finishes and world-class amenities.",
+                totalArea: "12 acres",
+                towers: 6,
+                floors: 20,
+                totalFlats: 900,
+                flatAreas: ["1000 sq ft (2BHK)", "1400 sq ft (3BHK)"],
+                mapImage: "https://via.placeholder.com/600x400/FF9800/white?text=Project+2+Location+Map",
+                floorPlanImage: "https://via.placeholder.com/500x600/FF5722/white?text=Floor+Plan+Project+2",
+                brochureUrl: "mages/Tulip Monsella-Brochure.pdf"
+            },
+            { 
+                id: 103, 
+                name: "Project 3", 
+                price: 15000000, 
+                location: "Gurgaon Sector 55", 
+                about: "Premium residential towers with panoramic city views and state-of-the-art facilities for discerning homebuyers.",
+                totalArea: "20 acres",
+                towers: 10,
+                floors: 30,
+                totalFlats: 1500,
+                flatAreas: ["1500 sq ft (3BHK)", "2200 sq ft (4BHK)", "3000 sq ft (5BHK)"],
+                mapImage: "https://via.placeholder.com/600x400/9C27B0/white?text=Project+3+Location+Map",
+                floorPlanImage: "https://via.placeholder.com/500x600/E91E63/white?text=Floor+Plan+Project+3",
+                brochureUrl: "#"
+            },
         ]
     },
     3: {
