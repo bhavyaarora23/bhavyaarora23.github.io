@@ -43,17 +43,6 @@
             padding: 1rem 2rem;
         }
 
-        /* ADD THIS FOR MOBILE HAMBURGER BUTTON */
-.mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #D4AF37;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
          .logo {
             height: 100px;           /* Height of the logo */
             width: 100px;            /* Width adjusts automatically to maintain aspect ratio */
@@ -573,76 +562,6 @@
             }
         }
 
-        /* MOBILE RESPONSIVE STYLES - ADD THIS AT THE END OF YOUR CSS */
-@media (max-width: 768px) {
-    .mobile-menu-toggle {
-        display: block;
-    }
-
-    .nav-container {
-        padding: 1rem;
-    }
-
-    .logo {
-        height: 50px;
-        width: 50px;
-    }
-
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.98);
-        flex-direction: column;
-        padding: 1rem 0;
-        gap: 0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-links li {
-        width: 100%;
-        text-align: center;
-    }
-
-    .nav-links a {
-        display: block;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        width: 100%;
-    }
-
-    .login-btn {
-        margin: 1rem;
-        display: block;
-        text-align: center;
-    }
-
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-
-    .property-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-container {
-        grid-template-columns: 1fr;
-    }
-
-    .property-header {
-        grid-template-columns: 1fr;
-    }
-
-    main {
-        margin-top: 80px;
-    }
-}
     </style>
 </head>
 <body>
@@ -728,15 +647,6 @@
     <li><a href="#" onclick="showPage('contact')">Contact</a></li>
 </ul>
             <button class="login-btn" onclick="showPage('login')">Login</button>
-        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-        
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#" onclick="showSection('home')">Home</a></li>
-            <li><a href="#" onclick="showSection('properties')">Properties</a></li>
-            <li><a href="#" onclick="showSection('about')">About Us</a></li>
-            <li><a href="#" onclick="showSection('contact')">Contact</a></li>
-            <li><button class="login-btn" onclick="showSection('login')">Login</button></li>
-        </ul>
         </div>
     </nav>
 
@@ -2406,23 +2316,6 @@ function closeBrochureForm() {
     if (modal) {
         modal.remove();
     }
-}
-
-        function toggleMobileMenu() {
-    const navLinks = document.getElementById('navLinks');
-    navLinks.classList.toggle('active');
-}
-
-function showSection(sectionName) {
-    // Hide all sections
-    const sections = document.querySelectorAll('.page-section');
-    sections.forEach(section => section.classList.remove('active'));
-    
-    // Show selected section
-    document.getElementById(sectionName).classList.add('active');
-    
-    // Close mobile menu
-    document.getElementById('navLinks').classList.remove('active');
 }
 </script>
 </body>
