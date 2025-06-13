@@ -2195,60 +2195,118 @@ function downloadBrochure(event, projectId) {
     const email = form.querySelector('input[type="email"]').value;
     const phone = form.querySelector('input[type="tel"]').value;
     
-    // Log user details (optional)
-    console.log('User details:', { name, email, phone, projectId });
+    // Log user details for debugging
+    console.log('Download attempt:', { name, email, phone, projectId });
     
-    // Find the project to get its brochure URL and name
+    // Find the project
     let project = null;
-    let projectName = projectId;
-    
-    // Search through all developers to find the project
     for (const developerId in developerProjects) {
         const developer = developerProjects[developerId];
         const foundProject = developer.projects.find(p => p.id == projectId);
         if (foundProject) {
             project = foundProject;
-            projectName = foundProject.name.replace(/\s+/g, '-').toLowerCase();
             break;
         }
     }
     
-    // Determine the PDF URL
-    let pdfUrl;
-    if (project && project.brochureUrl && project.brochureUrl !== "#") {
-        // Use the brochureUrl from project data
-        pdfUrl = project.brochureUrl;
-    } else {
-        // Fallback to naming convention based on project ID
-        pdfUrl = `images/${projectId}-brochure.pdf`;
+    console.log('Found project:', project);
+    
+    // Try multiple PDF URLs in order of preference
+    const possibleUrls = [];
+    
+    if (project) {
+        // Add project-specific URLs
+        if (project.brochureUrl && project.brochureUrl !== "#") {
+            possibleUrls.push(project.brochureUrl);
+        }
+        possibleUrls.push(`images/${project.name.replace(/\s+/g, '-').toLowerCase()}-brochure.pdf`);
+        possibleUrls.push(`images/${project.name.replace(/\s+/g, '')}-brochure.pdf`);
     }
     
-    // Create download link
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = `${projectName}-brochure.pdf`;
-    link.target = '_blank'; // Open in new tab as backup
-    link.style.display = 'none';
+    // Add fallback URLs
+    possibleUrls.push(`images/${projectId}-brochure.pdf`);
+    possibleUrls.push('images/brochure.pdf');
     
-    // Add error handling
-    link.onerror = function() {
-        // If specific brochure doesn't exist, try generic one
-        console.log('Specific brochure not found, trying generic...');
-        const genericLink = document.createElement('a');
-        genericLink.href = 'images/brochure.pdf';
-        genericLink.download = 'brochure.pdf';
-        genericLink.target = '_blank';
-        genericLink.style.display = 'none';
-        document.body.appendChild(genericLink);
-        genericLink.click();
-        document.body.removeChild(genericLink);
-    };
+    console.log('Trying URLs:', possibleUrls);
     
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Function to try each URL
+    function tryDownload(urlIndex = 0) {
+        if (urlIndex >= possibleUrls.length) {
+            alert('Sorry, brochure not available. Please contact our agent.');
+            closeBrochureForm();
+            return;
+        }
+        
+        const pdfUrl = possibleUrls[urlIndex];
+        console.log(`Trying URL ${urlIndex + 1}:`, pdfUrl);
+        
+        // Test if file exists by trying to fetch it
+        fetch(pdfUrl, { method: 'HEAD' })
+            .then(response => {
+                console.log(`URL ${urlIndex + 1} response:`, response.status);
+                if (response.ok) {
+                    // File exists, try to download
+                    downloadFile(pdfUrl);
+                } else {
+                    // Try next URL
+                    tryDownload(urlIndex + 1);
+                }
+            })
+            .catch(error => {
+                console.log(`URL ${urlIndex + 1} failed:`, error);
+                // Try next URL
+                tryDownload(urlIndex + 1);
+            });
+    }
     
-    alert('Thank you! Your brochure download has started.');
+    // Function to actually download the file
+    function downloadFile(url) {
+        console.log('Downloading:', url);
+        
+        // Method 1: Try direct download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url.split('/').pop(); // Use filename from URL
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        
+        try {
+            link.click();
+            console.log('Download link clicked');
+            alert('Thank you! Your brochure download has started.');
+        } catch (error) {
+            console.log('Download failed, trying new window method');
+            // Method 2: Open in new window
+            window.open(url, '_blank');
+            alert('Thank you! Your brochure will open in a new tab.');
+        }
+        
+        document.body.removeChild(link);
+        closeBrochureForm();
+    }
+    
+    // Start trying URLs
+    tryDownload();
+}
+
+// Alternative simple function for immediate testing
+function downloadBrochureSimple(event, projectId) {
+    event.preventDefault();
+    
+    // For immediate testing - just try to open the PDF
+    const testUrl = 'images/Tulip Crimson Brochure 5.pdf'; // Your known file
+    
+    console.log('Testing with URL:', testUrl);
+    
+    // Open in new tab
+    const newWindow = window.open(testUrl, '_blank');
+    
+    if (newWindow) {
+        alert('Thank you! Your brochure will open in a new tab.');
+    } else {
+        alert('Please allow popups for this site and try again.');
+    }
+    
     closeBrochureForm();
 }
 
