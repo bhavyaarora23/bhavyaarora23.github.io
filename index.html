@@ -1847,7 +1847,7 @@ const developerProjects = {
                 flatAreas: ["3090 sq ft (4BHK)"],
                 mapImage: "images/tulip crimson location map.jpg",
                 floorPlanImage: "images/tulip crimson floor plan.jpg",
-                brochureUrl: "images/Tulip Crimson Brochure 5.pdf"
+                brochureUrl: "images/Tulip Crimson-Brochure.pdf"
             },
             { 
                 id: 102, 
@@ -2189,13 +2189,61 @@ function showBrochureForm(projectId) {
 function downloadBrochure(event, projectId) {
     event.preventDefault();
     
-    // Create download link with project-specific PDF
-    const pdfUrl = `images/${projectname}-brochure.pdf`;
+    // Get form data
+    const form = event.target;
+    const name = form.querySelector('input[type="text"]').value;
+    const email = form.querySelector('input[type="email"]').value;
+    const phone = form.querySelector('input[type="tel"]').value;
     
+    // Log user details (optional)
+    console.log('User details:', { name, email, phone, projectId });
+    
+    // Find the project to get its brochure URL and name
+    let project = null;
+    let projectName = projectId;
+    
+    // Search through all developers to find the project
+    for (const developerId in developerProjects) {
+        const developer = developerProjects[developerId];
+        const foundProject = developer.projects.find(p => p.id == projectId);
+        if (foundProject) {
+            project = foundProject;
+            projectName = foundProject.name.replace(/\s+/g, '-').toLowerCase();
+            break;
+        }
+    }
+    
+    // Determine the PDF URL
+    let pdfUrl;
+    if (project && project.brochureUrl && project.brochureUrl !== "#") {
+        // Use the brochureUrl from project data
+        pdfUrl = project.brochureUrl;
+    } else {
+        // Fallback to naming convention based on project ID
+        pdfUrl = `images/${projectId}-brochure.pdf`;
+    }
+    
+    // Create download link
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.download = `${projectname}-brochure.pdf`;
+    link.download = `${projectName}-brochure.pdf`;
+    link.target = '_blank'; // Open in new tab as backup
     link.style.display = 'none';
+    
+    // Add error handling
+    link.onerror = function() {
+        // If specific brochure doesn't exist, try generic one
+        console.log('Specific brochure not found, trying generic...');
+        const genericLink = document.createElement('a');
+        genericLink.href = 'images/brochure.pdf';
+        genericLink.download = 'brochure.pdf';
+        genericLink.target = '_blank';
+        genericLink.style.display = 'none';
+        document.body.appendChild(genericLink);
+        genericLink.click();
+        document.body.removeChild(genericLink);
+    };
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
