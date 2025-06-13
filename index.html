@@ -2189,21 +2189,12 @@ function showBrochureForm(projectId) {
 function downloadBrochure(event, projectId) {
     event.preventDefault();
     
-    // Get form data (optional - for tracking purposes)
-    const form = event.target;
-    const name = form.querySelector('input[type="text"]').value;
-    const email = form.querySelector('input[type="email"]').value;
-    const phone = form.querySelector('input[type="tel"]').value;
-    
-    // Log user details if needed
-    console.log('User details:', { name, email, phone, projectId });
-    
-    // Create download link pointing to your PDF in images folder
-    const pdfUrl = 'images/brochure.pdf';
+    // Create download link with project-specific PDF
+    const pdfUrl = `images/${projectname}-brochure.pdf`;
     
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.download = 'brochure.pdf';
+    link.download = `${projectname}-brochure.pdf`;
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
