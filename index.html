@@ -112,6 +112,21 @@
   cursor: pointer;
 }
 
+        /* Mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
         /* Main Content */
         main {
             margin-top: 80px;
@@ -539,31 +554,132 @@
             display: block;
         }
 
-        /* Responsive */
+       /* Mobile Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #2c3e50;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             }
 
-            .hero-content h1 {
-                font-size: 2.5rem;
+            .nav-links.active {
+                display: flex;
             }
 
-            .property-header {
-                grid-template-columns: 1fr;
+            .mobile-menu-toggle {
+                display: flex;
             }
 
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-
-            .about-hero h1 {
+            .hero h1 {
                 font-size: 2rem;
             }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .directors {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .services h2,
+            .about h2,
+            .features h2,
+            .contact h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-number {
+                font-size: 2.5rem;
+            }
+        }
+        /* View Toggle */
+        .view-toggle {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1001;
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .view-toggle:hover {
+            background: #2980b9;
+        }
+
+        /* Mobile View Simulation */
+        .mobile-view {
+            max-width: 375px;
+            margin: 0 auto;
+            border: 2px solid #333;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .mobile-view header {
+            position: relative;
+        }
+
+        .mobile-view .hero {
+            padding: 60px 0 40px;
+        }
+
+        .mobile-view .services,
+        .mobile-view .about,
+        .mobile-view .features,
+        .mobile-view .contact {
+            padding: 40px 0;
         }
     </style>
 </head>
 <body>
+    <button class="view-toggle" onclick="toggleView()">Toggle Mobile View</button>
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
