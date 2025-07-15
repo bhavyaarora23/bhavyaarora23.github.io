@@ -562,6 +562,41 @@
                 font-size: 2rem;
             }
         }
+
+        .menu-toggle {
+  display: none; 
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 12px;
+  z-index: 1100;
+}
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #222;
+    flex-direction: column;
+    z-index: 999;
+  }
+  .nav-links.show {
+    display: flex;
+  }
+  nav {
+    position: relative;
+  }
+}
+
     </style>
 </head>
 <body>
@@ -569,6 +604,7 @@
     <nav>
         <div class="nav-container">
             <img src="images/logo.png" alt="Company Logo" class="logo">
+            <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
             <ul class="nav-links">
     <li><a href="#" onclick="showPage('homepage')">Home</a></li>
     <li class="dropdown">
@@ -2220,5 +2256,14 @@ function closeBrochureForm() {
     }
 }
 </script>
+    
+    <script>
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+menuToggle.addEventListener('click', function() {
+  navLinks.classList.toggle('show');
+});
+</script>
+    
 </body>
 </html>
