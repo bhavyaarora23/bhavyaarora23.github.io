@@ -562,6 +562,59 @@
                 font-size: 2rem;
             }
         }
+
+        @media (max-width: 768px) {
+  body {
+    font-size: 14px; /* Only applies on mobile */
+    padding: 0 15px;
+  }
+  
+  .hero h1 {
+    font-size: 24px !important; /* Overrides desktop size only on mobile */
+    line-height: 1.4;
+  }
+  
+  .nav {
+    flex-direction: column; /* Only on mobile */
+  }
+  
+  .property-grid {
+    grid-template-columns: 1fr; /* Single column only on mobile */
+  }
+}
+
+/* Tablet styles (optional) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet-specific styles if needed */
+}
+        /* Add these NEW classes without touching existing ones */
+@media (max-width: 768px) {
+  .mobile-hero {
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .mobile-nav {
+    display: none; /* Hide desktop nav on mobile */
+  }
+  
+  .mobile-menu {
+    display: block; /* Show mobile menu only on mobile */
+  }
+  
+  .mobile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+/* Hide mobile elements on desktop */
+@media (min-width: 769px) {
+  .mobile-menu {
+    display: none;
+  }
+}
     </style>
 </head>
 <body>
@@ -614,7 +667,13 @@
             <button class="login-btn" onclick="showPage('login')">Login</button>
         </div>
     </nav>
-
+<!-- Mobile navigation (new) -->
+<nav class="nav mobile-nav">
+  <button class="mobile-menu-toggle">☰</button>
+  <div class="mobile-menu">
+    <!-- Mobile menu items -->
+  </div>
+</nav>
     <main>
         <!-- Homepage -->
 <section id="homepage" class="page-section active">
