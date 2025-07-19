@@ -693,6 +693,8 @@
                 padding: 1rem 0;
                 box-shadow: 0 5px 20px rgba(0,0,0,0.3);
                 z-index: 999;
+                max-height: 70vh;
+                overflow-y: auto;
             }
 
             .nav-links.show {
@@ -701,26 +703,145 @@
 
             .nav-links li {
                 width: 100%;
-                text-align: center;
-                padding: 0.5rem 0;
+                text-align: left;
+                padding: 0;
+                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            }
+
+            .nav-links > li:last-child {
+                border-bottom: none;
             }
 
             .nav-links a {
                 display: block;
-                padding: 1rem;
+                padding: 1rem 1.5rem;
                 color: #D4AF37;
                 font-size: 1.1rem;
+                text-decoration: none;
+            }
+
+            .nav-links a:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
+            }
+
+            /* Mobile and Desktop Login Button Styles */
+            .mobile-login-item {
+                border-top: 2px solid rgba(212, 175, 55, 0.3);
+                padding-top: 1rem;
+                margin-top: 1rem;
+            }
+
+            .mobile-login-btn {
+                display: block;
+                width: calc(100% - 3rem);
+                margin: 0 1.5rem;
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+                border-radius: 8px;
+                background: linear-gradient(45deg, #000000, #D4AF37);
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .desktop-login-btn {
+                display: none;
             }
 
             .login-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-                margin-top: 1rem;
-                width: 100%;
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                margin: 1rem 1.5rem;
+                width: calc(100% - 3rem);
+                border-radius: 8px;
             }
 
-            /* Dropdown menu mobile fixes */
-            .dropdown-menu,
+            /* Mobile Dropdown Styles */
+            .dropdown {
+                position: relative;
+            }
+
+            .dropdown-toggle {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
+                background: none;
+                border: none;
+                color: #D4AF37;
+                font-size: 1.1rem;
+                cursor: pointer;
+                text-align: left;
+            }
+
+            .dropdown-toggle:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
+            }
+
+            .dropdown-arrow {
+                transition: transform 0.3s ease;
+                font-size: 1rem;
+            }
+
+            .dropdown.active .dropdown-arrow {
+                transform: rotate(180deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 0, 0, 0.9);
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown.active .dropdown-menu {
+                max-height: 500px;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu > a {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem 2rem;
+                color: #D4AF37;
+                text-decoration: none;
+                background: rgba(212, 175, 55, 0.05);
+                border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+                font-size: 1rem;
+            }
+
+            .dropdown-submenu > a:hover {
+                background: rgba(212, 175, 55, 0.15);
+                color: #fff;
+            }
+
+            .submenu-arrow {
+                transition: transform 0.3s ease;
+                font-size: 0.9rem;
+            }
+
+            .dropdown-submenu.active .submenu-arrow {
+                transform: rotate(90deg);
+            }
+
             .submenu {
                 position: static;
                 opacity: 1;
@@ -728,8 +849,38 @@
                 transform: none;
                 box-shadow: none;
                 background: rgba(0, 0, 0, 0.8);
-                margin-left: 1rem;
                 border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown-submenu.active .submenu {
+                max-height: 200px;
+            }
+
+            .submenu li {
+                border-bottom: 1px solid rgba(212, 175, 55, 0.05);
+            }
+
+            .submenu li:last-child {
+                border-bottom: none;
+            }
+
+            .submenu li a {
+                display: block;
+                padding: 0.7rem 3rem;
+                color: #D4AF37;
+                text-decoration: none;
+                font-size: 0.95rem;
+                background: rgba(212, 175, 55, 0.02);
+            }
+
+            .submenu li a:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
             }
 
             /* Hero section mobile */
@@ -948,6 +1099,17 @@
             }
         }
 
+        /* Desktop view - hide mobile login, show desktop login */
+        @media (min-width: 769px) {
+            .mobile-login-item {
+                display: none;
+            }
+
+            .desktop-login-btn {
+                display: block;
+            }
+        }
+
         /* Animation keyframes */
         @keyframes gradient {
             0% { background-position: 0% 50%; }
@@ -967,35 +1129,37 @@
             <ul class="nav-links">
                 <li><a href="#" onclick="showPage('homepage')">Home</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">Projects <span class="dropdown-arrow">▼</span></a>
+                    <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                        Projects <span class="dropdown-arrow">▼</span>
+                    </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
-                            <a href="#">Tulip<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Tulip<span class="submenu-arrow">▶</span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(1, 1)">Tulip Crimson</a></li>
                                 <li><a href="#" onclick="showDeveloperProject(1, 2)">Tulip Monsella</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#">Whiteland<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Whiteland<span class="submenu-arrow">▶</span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(2, 1)">Blissville</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#">Adani<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Adani<span class="submenu-arrow">▶</span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(3, 1)">Samsara Vilasa</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#">Emaar<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Emaar<span class="submenu-arrow">▶</span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(4, 1)">Urban Ascent</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#">Trinity<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Trinity<span class="submenu-arrow">▶</span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(5, 1)">Sky Palazzo</a></li>
                             </ul>
@@ -1005,8 +1169,11 @@
                 <li><a href="#" onclick="showPage('listings')">Properties</a></li>
                 <li><a href="#" onclick="showPage('about')">About</a></li>
                 <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+                <li class="mobile-login-item">
+                    <button class="login-btn mobile-login-btn" onclick="handleMobileLogin()">Login</button>
+                </li>
             </ul>
-            <button class="login-btn" onclick="showPage('login')">Login</button>
+            <button class="login-btn desktop-login-btn" onclick="showPage('login')">Login</button>
         </div>
     </nav>
 
@@ -1195,15 +1362,54 @@
         <div id="profileSidebar" class="profile-sidebar">
             <div class="profile-content">
                 <span class="close-btn" onclick="toggleProfileSidebar()">&times;</span>
-                <h2>My Profile</h2>
-                <p><strong>Name:</strong> <span id="sidebar-name">-</span></p>
-                <p><strong>Email:</strong> <span id="sidebar-email">-</span></p>
-                <p><strong>Mobile:</strong> <span id="sidebar-mobile">-</span></p>
-                <h4>Saved Properties:</h4>
-                <ul id="sidebar-saved-properties">
-                    <li>Villa in Sector 45</li>
-                    <li>3BHK in Sector 60</li>
-                </ul>
+                
+                <!-- Profile Header with Human Icon -->
+                <div class="profile-header" style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(0,0,0,0.1);">
+                    <div class="profile-avatar" style="width: 80px; height: 80px; background: linear-gradient(45deg, #000000, #333333); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                        👤
+                    </div>
+                    <h2 style="margin: 0; color: #000; font-size: 1.5rem;">My Profile</h2>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Welcome back!</p>
+                </div>
+
+                <!-- Profile Sections -->
+                <div class="profile-sections">
+                    <!-- Personal Details Section -->
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h3 style="color: #000; margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                            📋 Personal Details
+                        </h3>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Name:</strong> <span id="sidebar-name" style="color: #333;">-</span>
+                        </div>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Email:</strong> <span id="sidebar-email" style="color: #333;">-</span>
+                        </div>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Mobile:</strong> <span id="sidebar-mobile" style="color: #333;">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Saved Properties Section -->
+                    <div class="profile-section">
+                        <h3 style="color: #000; margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                            ❤️ Saved Properties <span id="saved-count" style="background: #000; color: #D4AF37; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.8rem;">0</span>
+                        </h3>
+                        <div id="sidebar-saved-properties" style="max-height: 300px; overflow-y: auto;">
+                            <p style="color: #666; text-align: center; padding: 1rem; font-style: italic;">No saved properties yet. Click the heart icon on any property to save it!</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="profile-actions" style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid rgba(0,0,0,0.1);">
+                        <button onclick="clearAllSavedProperties()" style="width: 100%; padding: 0.8rem; background: #dc3545; color: white; border: none; border-radius: 5px; margin-bottom: 1rem; cursor: pointer; font-weight: 500;">
+                            🗑️ Clear All Saved
+                        </button>
+                        <button onclick="logout()" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #000000, #333333); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;">
+                            🚪 Logout
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1606,6 +1812,7 @@
         let otpTimer = null;
         let otpCountdown = 0;
         let currentLoginMethod = 'email';
+        let savedProperties = []; // Array to store saved property IDs
 
         // Page navigation
         function showPage(pageId) {
@@ -1623,12 +1830,13 @@
 
         // Property display functions
         function createPropertyCard(property) {
+            const isSaved = savedProperties.includes(property.id);
             return `
                 <div class="property-card" id="property-${property.id}">
                     <div class="property-image">
                         Property Image
                         <div class="save-icon" onclick="toggleSave(${property.id}, event)">
-                            <span id="heart-${property.id}" style="color: ${property.saved ? 'red' : '#ccc'}; font-size: 20px;">&#10084;</span>
+                            <span id="heart-${property.id}" style="color: ${isSaved ? 'red' : '#ccc'}; font-size: 20px;">&#10084;</span>
                         </div>
                     </div>
                     <div class="property-info" onclick="showPropertyDetail(${property.id})">
@@ -1646,10 +1854,14 @@
         }
 
         function createUpcomingProjectCard(project) {
+            const isSaved = savedProperties.includes(project.id);
             return `
                 <div class="property-card" onclick="showPropertyDetail(${project.id})">
                     <div class="property-image">
                         Project Image
+                        <div class="save-icon" onclick="toggleSave(${project.id}, event)">
+                            <span id="heart-${project.id}" style="color: ${isSaved ? 'red' : '#ccc'}; font-size: 20px;">&#10084;</span>
+                        </div>
                     </div>
                     <div class="property-info">
                         <div class="property-price">₹${(project.price / 10000000).toFixed(1)} Cr</div>
@@ -1673,14 +1885,191 @@
 
         function toggleSave(id, event) {
             event.stopPropagation();
+            
+            if (!currentUser) {
+                alert('Please login to save properties');
+                showPage('login');
+                return;
+            }
+
             const property = properties.find(p => p.id === id);
+            const upcomingProject = upcomingProjects.find(p => p.id === id);
+            const targetProperty = property || upcomingProject;
+            
+            if (!targetProperty) return;
+
+            const heart = document.getElementById(`heart-${id}`);
+            if (!heart) return;
+
+            // Toggle saved state
+            if (savedProperties.includes(id)) {
+                // Remove from saved
+                savedProperties = savedProperties.filter(savedId => savedId !== id);
+                heart.style.color = '#ccc';
+                showNotification(`${targetProperty.title} removed from saved properties`, 'info');
+            } else {
+                // Add to saved
+                savedProperties.push(id);
+                heart.style.color = 'red';
+                showNotification(`${targetProperty.title} saved to your profile!`, 'success');
+            }
+
+            // Update saved properties in profile
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+        }
+
+        function updateSavedPropertiesDisplay() {
+            const container = document.getElementById('sidebar-saved-properties');
+            if (!container) return;
+
+            if (savedProperties.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 1rem; font-style: italic;">No saved properties yet. Click the heart icon on any property to save it!</p>';
+                return;
+            }
+
+            const savedHTML = savedProperties.map(id => {
+                const property = properties.find(p => p.id === id);
+                const upcomingProject = upcomingProjects.find(p => p.id === id);
+                const targetProperty = property || upcomingProject;
+                
+                if (!targetProperty) return '';
+
+                return `
+                    <div class="saved-property-item" style="background: rgba(0,0,0,0.05); padding: 1rem; margin-bottom: 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" 
+                         onclick="showPropertyDetail(${id}); toggleProfileSidebar();"
+                         onmouseover="this.style.background='rgba(0,0,0,0.1)'" 
+                         onmouseout="this.style.background='rgba(0,0,0,0.05)'">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #000; font-size: 1rem;">${targetProperty.title}</h4>
+                                <p style="margin: 0 0 0.3rem 0; color: #666; font-size: 0.9rem;">📍 ${targetProperty.location}</p>
+                                <p style="margin: 0; color: #D4AF37; font-weight: bold; font-size: 0.9rem;">₹${(targetProperty.price / 10000000).toFixed(1)} Cr</p>
+                            </div>
+                            <button onclick="removeSavedProperty(${id}, event)" 
+                                    style="background: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;"
+                                    title="Remove from saved">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = savedHTML;
+        }
+
+        function removeSavedProperty(id, event) {
+            event.stopPropagation();
+            
+            savedProperties = savedProperties.filter(savedId => savedId !== id);
+            
+            // Update heart icon if visible
+            const heart = document.getElementById(`heart-${id}`);
+            if (heart) {
+                heart.style.color = '#ccc';
+            }
+            
+            // Update display
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+            
+            const property = properties.find(p => p.id === id) || upcomingProjects.find(p => p.id === id);
             if (property) {
-                property.saved = !property.saved;
+                showNotification(`${property.title} removed from saved properties`, 'info');
+            }
+        }
+
+        function updateSavedCount() {
+            const countElement = document.getElementById('saved-count');
+            if (countElement) {
+                countElement.textContent = savedProperties.length;
+            }
+        }
+
+        function clearAllSavedProperties() {
+            if (savedProperties.length === 0) {
+                showNotification('No saved properties to clear', 'info');
+                return;
+            }
+
+            const confirmClear = confirm(`Are you sure you want to remove all ${savedProperties.length} saved properties?`);
+            if (!confirmClear) return;
+
+            // Clear all saved properties
+            savedProperties.forEach(id => {
                 const heart = document.getElementById(`heart-${id}`);
                 if (heart) {
-                    heart.style.color = property.saved ? 'red' : '#ccc';
+                    heart.style.color = '#ccc';
                 }
+            });
+
+            savedProperties = [];
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+            showNotification('All saved properties cleared', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-weight: 500;
+                max-width: 300px;
+                word-wrap: break-word;
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            // Add animation keyframes if not already added
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
             }
+
+            document.body.appendChild(notification);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function logout() {
+            const confirmLogout = confirm('Are you sure you want to logout?');
+            if (!confirmLogout) return;
+
+            currentUser = null;
+            savedProperties = [];
+            updateAuthUI();
+            toggleProfileSidebar();
+            showNotification('Logged out successfully', 'success');
+            showPage('homepage');
         }
 
         function loadUpcomingProjects() {
@@ -1873,6 +2262,44 @@
             }
         }
 
+        // Mobile dropdown functions
+        function toggleDropdown(button) {
+            const dropdown = button.closest('.dropdown');
+            const isActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Close all submenus
+            document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                s.classList.remove('active');
+            });
+            
+            // Toggle current dropdown
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function toggleSubmenu(link) {
+            event.preventDefault();
+            const submenu = link.closest('.dropdown-submenu');
+            const isActive = submenu.classList.contains('active');
+            
+            // Close all other submenus in this dropdown
+            const dropdown = submenu.closest('.dropdown');
+            dropdown.querySelectorAll('.dropdown-submenu').forEach(s => {
+                if (s !== submenu) {
+                    s.classList.remove('active');
+                }
+            });
+            
+            // Toggle current submenu
+            submenu.classList.toggle('active');
+        }
+
         // Mobile menu toggle
         function toggleMobileMenu() {
             const navLinks = document.querySelector('.nav-links');
@@ -1886,6 +2313,13 @@
             } else {
                 menuToggle.innerHTML = '&#9776;';
                 menuToggle.style.fontSize = '1.5rem';
+                // Close all dropdowns when menu closes
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+                document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                    s.classList.remove('active');
+                });
             }
         }
 
@@ -1900,6 +2334,10 @@
                 document.getElementById('sidebar-name').textContent = currentUser.name || '-';
                 document.getElementById('sidebar-email').textContent = currentUser.email || '-';
                 document.getElementById('sidebar-mobile').textContent = currentUser.mobile || '-';
+                
+                // Update saved properties display and count
+                updateSavedPropertiesDisplay();
+                updateSavedCount();
             }
             
             // Add overlay for mobile
@@ -2110,15 +2548,45 @@
             }
         }
 
-        function updateAuthUI() {
-            const loginBtn = document.querySelector('.login-btn');
+        // Handle mobile login button click
+        function handleMobileLogin() {
             if (currentUser) {
-                loginBtn.textContent = 'My Profile';
-                loginBtn.onclick = toggleProfileSidebar;
+                toggleProfileSidebar();
             } else {
-                loginBtn.textContent = 'Login';
-                loginBtn.onclick = () => showPage('login');
+                showPage('login');
             }
+            // Close mobile menu
+            toggleMobileMenu();
+        }
+
+        // Update mobile login button text
+        function updateMobileAuthUI() {
+            const mobileLoginBtn = document.querySelector('.mobile-login-btn');
+            const desktopLoginBtn = document.querySelector('.desktop-login-btn');
+            
+            if (currentUser) {
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.textContent = 'My Profile';
+                    mobileLoginBtn.onclick = handleMobileLogin;
+                }
+                if (desktopLoginBtn) {
+                    desktopLoginBtn.textContent = 'My Profile';
+                    desktopLoginBtn.onclick = toggleProfileSidebar;
+                }
+            } else {
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.textContent = 'Login';
+                    mobileLoginBtn.onclick = handleMobileLogin;
+                }
+                if (desktopLoginBtn) {
+                    desktopLoginBtn.textContent = 'Login';
+                    desktopLoginBtn.onclick = () => showPage('login');
+                }
+            }
+        }
+
+        function updateAuthUI() {
+            updateMobileAuthUI();
         }
 
         function startOTPTimer() {
@@ -2165,7 +2633,7 @@
             sendOTP();
         }
 
-        function handleResize() {
+            function handleResize() {
             if (window.innerWidth > 768) {
                 const navLinks = document.querySelector('.nav-links');
                 const menuToggle = document.querySelector('.menu-toggle');
@@ -2177,6 +2645,14 @@
                     menuToggle.innerHTML = '&#9776;';
                     menuToggle.style.fontSize = '1.5rem';
                 }
+                
+                // Close all mobile dropdowns when switching to desktop
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+                document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                    s.classList.remove('active');
+                });
                 
                 removeSidebarOverlay();
             }
@@ -2219,11 +2695,12 @@
                 menuToggle.addEventListener('click', toggleMobileMenu);
             }
             
-            // Close mobile menu when clicking on links
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
+            // Close mobile menu when clicking on project links
+            const projectLinks = document.querySelectorAll('.submenu a');
+            projectLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (window.innerWidth <= 768) {
+                        // Close mobile menu
                         toggleMobileMenu();
                     }
                 });
