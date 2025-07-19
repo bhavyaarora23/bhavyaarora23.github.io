@@ -648,11 +648,25 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background: none;
+            border: none;
+            color: #D4AF37;
+            font-weight: 500;
+            font-size: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .dropdown-toggle:hover {
+            color: #fff;
         }
 
         .dropdown-arrow, .submenu-arrow {
             font-size: 0.8rem;
             transition: transform 0.3s ease;
+            color: #D4AF37;
         }
 
         .dropdown-menu {
@@ -875,6 +889,7 @@
                 font-size: 1.1rem;
                 cursor: pointer;
                 text-align: left;
+                text-decoration: none;
             }
 
             .dropdown-toggle:hover {
@@ -882,9 +897,11 @@
                 color: #fff;
             }
 
-            .dropdown-arrow {
+            .dropdown-arrow, .submenu-arrow {
                 transition: transform 0.3s ease;
                 font-size: 1rem;
+                color: #D4AF37;
+                font-weight: bold;
             }
 
             .dropdown.active .dropdown-arrow {
@@ -933,7 +950,9 @@
 
             .submenu-arrow {
                 transition: transform 0.3s ease;
-                font-size: 0.9rem;
+                font-size: 1rem;
+                color: #D4AF37;
+                font-weight: bold;
             }
 
             .dropdown-submenu.active .submenu-arrow {
@@ -1331,7 +1350,9 @@
             <ul class="nav-links">
                 <li><a href="#" onclick="showPage('homepage')">Home</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">Projects <span class="dropdown-arrow">▼</span></a>
+                    <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                        Projects <span class="dropdown-arrow">▼</span>
+                    </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
                             <a href="#" onclick="toggleSubmenu(this)">Tulip<span class="submenu-arrow">▶</span></a>
