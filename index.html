@@ -480,20 +480,65 @@
             transform: translateY(-2px);
         }
 
-        .resend-otp {
-            background: none;
-            border: none;
-            color: #D4AF37;
-            cursor: pointer;
-            text-decoration: underline;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+        /* Login Method Selection Styling */
+        .login-method-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .resend-otp:disabled {
+        .login-method-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.8rem 1rem;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .login-method-option:hover {
+            background: #e9ecef;
+            border-color: #D4AF37;
+        }
+
+        .login-method-option input[type="radio"] {
+            margin-right: 0.5rem;
+            margin-left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+        .login-method-option span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* OTP Resend Button */
+        .resend-otp-btn {
+            width: 100%;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .resend-otp-btn:hover {
+            background: #e9ecef;
+            border-color: #D4AF37;
+        }
+
+        .resend-otp-btn:disabled {
+            background: #f8f9fa;
             color: #999;
             cursor: not-allowed;
-            text-decoration: none;
+            border-color: #e0e0e0;
         }
 
         /* Contact/Inquiry */
@@ -1142,45 +1187,56 @@
                 border-color: #000000;
             }
 
-            /* Login method selection mobile */
-            .form-group div[style*="display: flex"] {
+            /* Mobile login method selection */
+            .login-method-container {
+                display: flex;
                 flex-direction: column;
                 gap: 0.8rem;
             }
 
-            .form-group label[style*="cursor: pointer"] {
-                flex-direction: row;
+            .login-method-option {
+                display: flex;
                 align-items: center;
-                gap: 0.5rem;
-                padding: 0.5rem;
-                background: #f8f9fa;
-                border-radius: 6px;
-                margin-bottom: 0;
-            }
-
-            /* OTP input styling */
-            #otp-group {
-                margin-bottom: 1.5rem;
-            }
-
-            #otp-group div[style*="display: flex"] {
-                flex-direction: column;
                 gap: 0.8rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
             }
 
+            .login-method-option:hover {
+                background: #e9ecef;
+                border-color: #D4AF37;
+            }
+
+            .login-method-option input[type="radio"] {
+                width: 20px;
+                height: 20px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            .login-method-option span {
+                font-weight: 500;
+                color: #333;
+                font-size: 1rem;
+            }
+
+            /* OTP section mobile */
             #otp-group input {
-                order: 1;
+                margin-bottom: 0.8rem;
+                text-align: center;
+                font-size: 1.2rem;
+                letter-spacing: 0.2rem;
             }
 
-            #otp-group button {
-                order: 2;
+            .resend-otp-btn {
                 width: 100%;
                 padding: 0.8rem;
-                background: #f0f0f0;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                cursor: pointer;
                 font-size: 0.9rem;
+                margin-top: 0;
             }
 
             .auth-btn {
@@ -1276,7 +1332,7 @@
                 <li><a href="#" onclick="showPage('homepage')">Home</a></li>
                 <li class="dropdown">
                     <button class="dropdown-toggle" onclick="toggleDropdown(this)">
-                        Projects <span class="dropdown-arrow">▲</span>
+                        Projects <span class="dropdown-arrow">▼</span>
                     </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
@@ -1461,14 +1517,14 @@
                         <!-- Login Method Selection -->
                         <div class="form-group">
                             <label>Choose Login Method</label>
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                                <label style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="loginMethod" value="email" checked onchange="toggleLoginMethod()" style="margin-right: 0.5rem;">
-                                    Email
+                            <div class="login-method-container">
+                                <label class="login-method-option">
+                                    <input type="radio" name="loginMethod" value="email" checked onchange="toggleLoginMethod()">
+                                    <span>Email</span>
                                 </label>
-                                <label style="display: flex; align-items: center; cursor: pointer;">
-                                    <input type="radio" name="loginMethod" value="mobile" onchange="toggleLoginMethod()" style="margin-right: 0.5rem;">
-                                    Mobile Number
+                                <label class="login-method-option">
+                                    <input type="radio" name="loginMethod" value="mobile" onchange="toggleLoginMethod()">
+                                    <span>Mobile Number</span>
                                 </label>
                             </div>
                         </div>
@@ -1487,10 +1543,8 @@
 
                         <div class="form-group" id="otp-group" style="display: none;">
                             <label>Enter OTP</label>
-                            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6" style="flex: 1;">
-                                <button type="button" id="resend-otp" style="background: #f0f0f0; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; white-space: nowrap;" onclick="resendOTP()">Resend</button>
-                            </div>
+                            <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                            <button type="button" id="resend-otp" class="resend-otp-btn" onclick="resendOTP()">Resend OTP</button>
                             <small id="otp-timer" style="color: #666; font-size: 0.8rem;"></small>
                             <small id="otp-sent-to" style="color: #D4AF37; font-size: 0.8rem; display: block; margin-top: 0.5rem;"></small>
                         </div>
