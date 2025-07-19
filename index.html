@@ -2389,6 +2389,9 @@
             const project = developer.projects[projectIndex - 1];
             if (!project) return;
             
+            // Close mobile menu when navigating to project (only when final project is selected)
+            closeMobileMenuOnProjectSelection();
+            
             showProjectDetails(project, developer.name);
         }
 
@@ -2966,19 +2969,25 @@
                 menuToggle.addEventListener('click', toggleMobileMenu);
             }
             
-            // Close mobile menu when clicking on navigation links
-            const allNavLinks = document.querySelectorAll('.nav-links a:not(.dropdown-toggle)');
+            // Close mobile menu when clicking on navigation links (but NOT dropdown toggles)
+            const allNavLinks = document.querySelectorAll('.nav-links a:not(.dropdown-toggle):not([onclick*="toggleSubmenu"])');
             allNavLinks.forEach(link => {
                 link.addEventListener('click', () => {
-                    closeMobileMenuOnNavigation();
+                    // Only close menu if it's a main navigation link, not a submenu toggle
+                    if (!link.closest('.dropdown-submenu') || link.onclick && link.onclick.toString().includes('showDeveloperProject')) {
+                        closeMobileMenuOnNavigation();
+                    }
                 });
             });
 
             // Close mobile menu when clicking on final project links (not developer names)
             const projectLinks = document.querySelectorAll('.submenu a');
             projectLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMobileMenuOnProjectSelection();
+                link.addEventListener('click', (e) => {
+                    // Only close menu when selecting actual projects, not when toggling submenus
+                    if (link.onclick && link.onclick.toString().includes('showDeveloperProject')) {
+                        closeMobileMenuOnProjectSelection();
+                    }
                 });
             });
 
