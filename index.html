@@ -104,12 +104,13 @@
             top: 0;
             width: 350px;
             height: 100%;
-            background-color: #D4AF37;
-            box-shadow: -3px 0 15px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.5);
             padding: 2rem;
             z-index: 2000;
             transition: right 0.3s ease;
             overflow-y: auto;
+            border-left: 2px solid #D4AF37;
         }
 
         .profile-sidebar.active {
@@ -122,7 +123,59 @@
             right: 1rem;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #000;
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-content .close-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-header h2 {
+            color: #D4AF37 !important;
+        }
+
+        .profile-header p {
+            color: #D4AF37 !important;
+            opacity: 0.8;
+        }
+
+        .profile-section h3 {
+            color: #D4AF37 !important;
+        }
+
+        .detail-item {
+            background: rgba(212, 175, 55, 0.1) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .detail-item strong {
+            color: #D4AF37 !important;
+        }
+
+        .detail-item span {
+            color: #ffffff !important;
+        }
+
+        .saved-property-item {
+            background: rgba(212, 175, 55, 0.1) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .saved-property-item h4 {
+            color: #D4AF37 !important;
+        }
+
+        .saved-property-item p {
+            color: #ffffff !important;
         }
 
         /* Main Content */
@@ -1122,7 +1175,7 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="#">
+            <a href="#" onclick="showPage('homepage')">
                 <img src="images/logo.png" alt="Company Logo" class="logo" onerror="this.style.display='none'">
             </a>
             <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
@@ -2323,6 +2376,28 @@
             }
         }
 
+        // Close mobile menu when navigation item is clicked
+        function closeMobileMenuOnNavigation() {
+            if (window.innerWidth <= 768) {
+                const navLinks = document.querySelector('.nav-links');
+                const menuToggle = document.querySelector('.menu-toggle');
+                
+                if (navLinks && navLinks.classList.contains('show')) {
+                    navLinks.classList.remove('show');
+                    menuToggle.innerHTML = '&#9776;';
+                    menuToggle.style.fontSize = '1.5rem';
+                    
+                    // Close all dropdowns
+                    document.querySelectorAll('.dropdown').forEach(d => {
+                        d.classList.remove('active');
+                    });
+                    document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                        s.classList.remove('active');
+                    });
+                }
+            }
+        }
+
         // Profile sidebar toggle
         function toggleProfileSidebar() {
             const sidebar = document.getElementById('profileSidebar');
@@ -2695,14 +2770,19 @@
                 menuToggle.addEventListener('click', toggleMobileMenu);
             }
             
+            // Close mobile menu when clicking on navigation links
+            const allNavLinks = document.querySelectorAll('.nav-links a:not(.dropdown-toggle)');
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenuOnNavigation();
+                });
+            });
+
             // Close mobile menu when clicking on project links
             const projectLinks = document.querySelectorAll('.submenu a');
             projectLinks.forEach(link => {
                 link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        // Close mobile menu
-                        toggleMobileMenu();
-                    }
+                    closeMobileMenuOnNavigation();
                 });
             });
 
