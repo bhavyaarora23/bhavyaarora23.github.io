@@ -329,12 +329,32 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
             padding: 8px;
             cursor: pointer;
             z-index: 5;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .save-icon:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .save-icon span {
+            font-size: 20px !important;
+            line-height: 1;
+            display: inline-block;
+            transition: color 0.3s ease;
+            font-family: Arial, sans-serif;
         }
 
         .property-info {
@@ -639,7 +659,7 @@
             font-weight: bold;
         }
 
-        /* Dropdown Navigation Styles */
+        /* Desktop dropdown styles */
         .dropdown {
             position: relative;
         }
@@ -667,6 +687,19 @@
             font-size: 0.8rem;
             transition: transform 0.3s ease;
             color: #D4AF37;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .dropdown-arrow::before {
+            content: "▼";
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .submenu-arrow::before {
+            content: "▶";
+            display: inline-block;
+            transition: transform 0.3s ease;
         }
 
         .dropdown-menu {
@@ -694,7 +727,7 @@
             transform: translateY(0);
         }
 
-        .dropdown:hover .dropdown-arrow {
+        .dropdown:hover .dropdown-arrow::before {
             transform: rotate(180deg);
         }
 
@@ -743,7 +776,7 @@
             transform: translateX(0);
         }
 
-        .dropdown-submenu:hover .submenu-arrow {
+        .dropdown-submenu:hover .submenu-arrow::before {
             transform: rotate(90deg);
         }
 
@@ -837,7 +870,7 @@
                 color: #fff;
             }
 
-            /* Mobile and Desktop Login Button Styles */
+            /* Mobile login button */
             .mobile-login-item {
                 border-top: 2px solid rgba(212, 175, 55, 0.3);
                 padding-top: 1rem;
@@ -890,6 +923,8 @@
                 cursor: pointer;
                 text-align: left;
                 text-decoration: none;
+                font-family: inherit;
+                transition: background-color 0.3s ease;
             }
 
             .dropdown-toggle:hover {
@@ -897,93 +932,19 @@
                 color: #fff;
             }
 
+            /* Mobile dropdown arrow fixes */
             .dropdown-arrow, .submenu-arrow {
                 transition: transform 0.3s ease;
                 font-size: 1rem;
                 color: #D4AF37;
                 font-weight: bold;
+                font-family: Arial, sans-serif !important;
             }
 
-            .dropdown.active .dropdown-arrow {
-                transform: rotate(180deg);
-            }
-
-            .dropdown-menu {
-                position: static;
-                opacity: 1;
-                visibility: visible;
-                transform: none;
-                box-shadow: none;
-                background: rgba(0, 0, 0, 0.9);
-                border-radius: 0;
-                padding: 0;
-                margin: 0;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-            }
-
-            .dropdown.active .dropdown-menu {
-                max-height: 500px;
-            }
-
-            .dropdown-submenu {
-                position: relative;
-            }
-
-            .dropdown-submenu > a {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0.8rem 2rem;
-                color: #D4AF37;
-                text-decoration: none;
-                background: rgba(212, 175, 55, 0.05);
-                border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-                font-size: 1rem;
-            }
-
-            .dropdown-submenu > a:hover {
-                background: rgba(212, 175, 55, 0.15);
-                color: #fff;
-            }
-
-            .submenu-arrow {
+            .dropdown-arrow::before {
+                content: "▼";
+                display: inline-block;
                 transition: transform 0.3s ease;
-                font-size: 1rem;
-                color: #D4AF37;
-                font-weight: bold;
-            }
-
-            .dropdown-submenu.active .submenu-arrow {
-                transform: rotate(90deg);
-            }
-
-            .submenu {
-                position: static;
-                opacity: 1;
-                visibility: visible;
-                transform: none;
-                box-shadow: none;
-                background: rgba(0, 0, 0, 0.8);
-                border-radius: 0;
-                padding: 0;
-                margin: 0;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-            }
-
-            .dropdown-submenu.active .submenu {
-                max-height: 200px;
-            }
-
-            .submenu li {
-                border-bottom: 1px solid rgba(212, 175, 55, 0.05);
-            }
-
-            .submenu li:last-child {
-                border-bottom: none;
             }
 
             .submenu li a {
@@ -1054,6 +1015,19 @@
             .property-details {
                 flex-direction: column;
                 gap: 0.5rem;
+            }
+
+            /* Mobile save icon adjustments */
+            .save-icon {
+                width: 32px;
+                height: 32px;
+                padding: 6px;
+                top: 8px;
+                right: 8px;
+            }
+
+            .save-icon span {
+                font-size: 16px !important;
             }
 
             /* Filter section mobile */
@@ -1351,36 +1325,36 @@
                 <li><a href="#" onclick="showPage('homepage')">Home</a></li>
                 <li class="dropdown">
                     <button class="dropdown-toggle" onclick="toggleDropdown(this)">
-                        Projects <span class="dropdown-arrow">▼</span>
+                        Projects <span class="dropdown-arrow"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown-submenu">
-                            <a href="#" onclick="toggleSubmenu(this)">Tulip<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Tulip<span class="submenu-arrow"></span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(1, 1)">Tulip Crimson</a></li>
                                 <li><a href="#" onclick="showDeveloperProject(1, 2)">Tulip Monsella</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#" onclick="toggleSubmenu(this)">Whiteland<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Whiteland<span class="submenu-arrow"></span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(2, 1)">Blissville</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#" onclick="toggleSubmenu(this)">Adani<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Adani<span class="submenu-arrow"></span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(3, 1)">Samsara Vilasa</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#" onclick="toggleSubmenu(this)">Emaar<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Emaar<span class="submenu-arrow"></span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(4, 1)">Urban Ascent</a></li>
                             </ul>
                         </li>
                         <li class="dropdown-submenu">
-                            <a href="#" onclick="toggleSubmenu(this)">Trinity<span class="submenu-arrow">▶</span></a>
+                            <a href="#" onclick="toggleSubmenu(this)">Trinity<span class="submenu-arrow"></span></a>
                             <ul class="submenu">
                                 <li><a href="#" onclick="showDeveloperProject(5, 1)">Sky Palazzo</a></li>
                             </ul>
@@ -2399,8 +2373,7 @@
             document.getElementById('property-summary').innerHTML = `
                 <div class="project-header" style="margin-bottom: 2rem;">
                     <div class="project-price" style="font-size: 2.5rem; color: #D4AF37; margin-bottom: 0.5rem;">
-                        Starting from ₹${(project.price / 10000000).toFixed(1)} Cr
-                    </div>
+                        </div>
                     <div class="project-title" style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">
                         ${project.name}
                     </div>
@@ -2907,7 +2880,7 @@
             sendOTP();
         }
 
-            function handleResize() {
+        function handleResize() {
             if (window.innerWidth > 768) {
                 const navLinks = document.querySelector('.nav-links');
                 const menuToggle = document.querySelector('.menu-toggle');
@@ -3045,3 +3018,86 @@
     </script>
 </body>
 </html>
+                    enu-arrow::before {
+                content: "▶";
+                display: inline-block;
+                transition: transform 0.3s ease;
+            }
+
+            .dropdown.active .dropdown-arrow::before {
+                transform: rotate(180deg);
+            }
+
+            .dropdown-submenu.active .submenu-arrow::before {
+                transform: rotate(90deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 0, 0, 0.9);
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown.active .dropdown-menu {
+                max-height: 500px;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu > a {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem 2rem;
+                color: #D4AF37;
+                text-decoration: none;
+                background: rgba(212, 175, 55, 0.05);
+                border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .dropdown-submenu > a:hover {
+                background: rgba(212, 175, 55, 0.15);
+                color: #fff;
+            }
+
+            .submenu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 0, 0, 0.8);
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown-submenu.active .submenu {
+                max-height: 200px;
+            }
+
+            .submenu li {
+                border-bottom: 1px solid rgba(212, 175, 55, 0.05);
+            }
+
+            .submenu li:last-child {
+                border-bottom: none;
+            }
+
+            .subm
