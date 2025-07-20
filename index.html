@@ -1528,9 +1528,10 @@
                 <div class="auth-form">
                     <h2 id="auth-title">Login</h2>
                     <form id="auth-form">
-                        <div class="form-group" id="name-group" style="display: none;">
+                        <!-- Name field - always visible for both login and register -->
+                        <div class="form-group" id="name-group">
                             <label>Full Name</label>
-                            <input type="text" id="fullName" placeholder="Enter your full name">
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
                         </div>
                         
                         <!-- Login Method Selection -->
@@ -1570,8 +1571,7 @@
                         <button type="submit" class="auth-btn" id="auth-submit">Send OTP</button>
                     </form>
                     <p style="text-align: center; color: #666;">
-                        <span id="auth-switch-text">Don't have an account?</span>
-                        <a href="#" onclick="toggleAuth()" style="color: #D4AF37; text-decoration: none; font-weight: 500;" id="auth-switch-link">Register</a>
+                        <span id="auth-switch-text">New user? Just enter your details above and we'll create your account!</span>
                     </p>
                 </div>
             </div>
@@ -2682,37 +2682,14 @@
             }
         }
 
-        function toggleAuth() {
-            isLogin = !isLogin;
-            const title = document.getElementById('auth-title');
-            const submitBtn = document.getElementById('auth-submit');
-            const nameGroup = document.getElementById('name-group');
-            const otpGroup = document.getElementById('otp-group');
-            const switchText = document.getElementById('auth-switch-text');
-            const switchLink = document.getElementById('auth-switch-link');
-
-            otpSent = false;
-            otpGroup.style.display = 'none';
-            clearInterval(otpTimer);
-            document.getElementById('otp-timer').textContent = '';
-            document.getElementById('otp-sent-to').textContent = '';
-
-            if (isLogin) {
-                title.textContent = 'Login';
-                submitBtn.textContent = 'Send OTP';
-                nameGroup.style.display = 'none';
-                switchText.textContent = "Don't have an account?";
-                switchLink.textContent = 'Register';
-            } else {
-                title.textContent = 'Register';
-                submitBtn.textContent = 'Send OTP';
-                nameGroup.style.display = 'block';
-                switchText.textContent = 'Already have an account?';
-                switchLink.textContent = 'Login';
-            }
-        }
-
         function sendOTP() {
+            // Validate name field first
+            const fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                alert('Please enter your full name');
+                return false;
+            }
+
             let contactInfo = '';
             let contactValue = '';
             
@@ -2745,7 +2722,7 @@
             window.currentOTP = otpCode;
             
             document.getElementById('otp-group').style.display = 'block';
-            document.getElementById('auth-submit').textContent = isLogin ? 'Login' : 'Register';
+            document.getElementById('auth-submit').textContent = 'Verify & Login';
             
             const maskedContact = currentLoginMethod === 'email' 
                 ? contactValue.replace(/(.{2})(.*)(@.*)/, '$1***$3')
@@ -2763,7 +2740,7 @@
 
         function verifyOTP() {
             const enteredOTP = document.getElementById('otp').value;
-            const fullName = document.getElementById('fullName').value;
+            const fullName = document.getElementById('fullName').value.trim();
             
             let contactValue = '';
             if (currentLoginMethod === 'email') {
@@ -2784,7 +2761,7 @@
 
             if (parseInt(enteredOTP) === window.currentOTP) {
                 const userData = { 
-                    name: fullName || contactValue.split('@')[0] || 'User',
+                    name: fullName, // Use the actual name entered by user
                     loginMethod: currentLoginMethod
                 };
                 
@@ -2796,11 +2773,7 @@
                 
                 currentUser = userData;
                 
-                if (isLogin) {
-                    alert('Login successful! Welcome back.');
-                } else {
-                    alert('Registration successful! Welcome to Acres & Yards.');
-                }
+                alert(`Welcome ${fullName}! You have been successfully logged in.`);
 
                 updateAuthUI();
                 showPage('homepage');
@@ -2889,6 +2862,12 @@
         function resendOTP() {
             if (otpCountdown > 0) return;
             
+            const fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                alert('Please enter your name first');
+                return;
+            }
+            
             let contactValue = '';
             if (currentLoginMethod === 'email') {
                 contactValue = document.getElementById('email').value;
@@ -2907,7 +2886,7 @@
             sendOTP();
         }
 
-            function handleResize() {
+        function handleResize() {
             if (window.innerWidth > 768) {
                 const navLinks = document.querySelector('.nav-links');
                 const menuToggle = document.querySelector('.menu-toggle');
@@ -3045,3 +3024,4 @@
     </script>
 </body>
 </html>
+                
