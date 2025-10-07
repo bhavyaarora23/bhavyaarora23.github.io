@@ -3025,3 +3025,449 @@
 </body>
 </html>
                 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Acres & Yards — AI Navigator (Integrated)</title>
+  <style>
+    /* --- Minimal reset + reuse your theme colors --- */
+    :root{--gold:#D4AF37;--black:#000;--muted:#666}
+    body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#fff}
+
+    /* Floating Assistant Button */
+    .ai-assistant-btn{
+      position:fixed; right:24px; bottom:24px; z-index:2000;
+      background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff; border:none; border-radius:999px;
+      width:64px; height:64px; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px rgba(0,0,0,0.25);
+      cursor:pointer; font-size:28px
+    }
+
+    /* Sidebar */
+    .ai-sidebar{position:fixed; right:0; top:0; height:100%; width:420px; max-width:95vw; background:#0b0b0b; color:#fff; z-index:2000; transform:translateX(110%); transition:transform .32s cubic-bezier(.2,.9,.2,1); display:flex; flex-direction:column}
+    .ai-sidebar.open{transform:translateX(0)}
+    .ai-header{display:flex; align-items:center; justify-content:space-between; padding:16px; border-bottom:1px solid rgba(255,255,255,0.04)}
+    .ai-header h3{margin:0;color:var(--gold)}
+    .ai-body{flex:1; overflow:auto; padding:12px}
+    .ai-footer{padding:12px; border-top:1px solid rgba(255,255,255,0.04)}
+
+    /* Tabs / menu for 10 features */
+    .ai-menu{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px}
+    .ai-menu button{background:rgba(212,175,55,0.08); color:var(--gold); border:1px solid rgba(212,175,55,0.06); padding:8px; border-radius:8px; cursor:pointer}
+    .ai-menu button.active{background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff}
+
+    /* Chat area */
+    .ai-chat{background:#0f0f10; border-radius:10px; padding:12px; min-height:260px}
+    .ai-msg{margin-bottom:10px}
+    .ai-msg.user{text-align:right}
+    .ai-msg .bubble{display:inline-block; padding:8px 12px; border-radius:12px; max-width:85%}
+    .ai-msg.user .bubble{background:linear-gradient(45deg,var(--gold),#e6c975); color:#000}
+    .ai-msg.bot .bubble{background:#121212; border:1px solid rgba(255,255,255,0.03); color:#fff}
+
+    /* Quick forms & small controls */
+    label{display:block; font-size:13px; color:var(--muted); margin-top:8px}
+    input[type=text], select, textarea, input[type=number]{width:100%; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:#fff}
+    .small-row{display:flex; gap:8px}
+    .btn{background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
+    .muted{color:var(--muted)}
+
+    /* responsive */
+    @media (max-width:600px){.ai-sidebar{width:100vw}}
+
+    /* tiny toast */
+    .ai-toast{position:fixed; right:24px; bottom:100px; background:#000; color:#fff; padding:8px 12px; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,.25)}
+  </style>
+</head>
+<body>
+
+  <!-- === Your existing site should remain as-is. This file focuses on the AI Navigator widget only. === -->
+  <!-- Floating assistant trigger -->
+  <button id="aiToggle" class="ai-assistant-btn" title="Open AI Navigator">🤖</button>
+
+  <!-- Sidebar UI -->
+  <aside id="aiSidebar" class="ai-sidebar" aria-hidden="true">
+    <div class="ai-header">
+      <h3>AI Navigator</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="voiceBtn" class="btn" title="Voice Search">🎙️</button>
+        <button id="closeAi" class="btn" title="Close">✕</button>
+      </div>
+    </div>
+
+    <div class="ai-body">
+      <div class="ai-menu" id="featureMenu">
+        <!-- 10 features -->
+        <button data-feature="matchmaker" class="active">Matchmaker</button>
+        <button data-feature="tour">Virtual Tour</button>
+        <button data-feature="predictor">Value Predictor</button>
+        <button data-feature="designer">Dream Designer</button>
+        <button data-feature="agent">GPT Agent</button>
+        <button data-feature="relocate">Relocation</button>
+        <button data-feature="fraud">Fraud Check</button>
+        <button data-feature="sentiment">Neighborhood</button>
+        <button data-feature="voice">Voice Search</button>
+        <button data-feature="finance">FinPlanner</button>
+      </div>
+
+      <!-- Dynamic panel -->
+      <div id="featurePanel">
+        <!-- Default: Matchmaker -->
+        <div data-panel="matchmaker" class="panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <strong>AI Property Matchmaker</strong>
+            <small class="muted">Personalized picks</small>
+          </div>
+
+          <label>Family size</label>
+          <select id="mmFamily">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
+          </select>
+
+          <label>Commute preference</label>
+          <select id="mmCommute">
+            <option value="metro">Metro</option><option value="car">Car</option><option value="walk">Walking distance</option>
+          </select>
+
+          <label>Hobbies (comma separated)</label>
+          <input id="mmHobbies" type="text" placeholder="jogging, music, kids park" />
+
+          <label>Budget (₹)</label>
+          <input id="mmBudget" type="number" placeholder="e.g. 6000000" />
+
+          <label>Future goals</label>
+          <input id="mmGoals" type="text" placeholder="invest/rent-out/own long-term" />
+
+          <div style="margin-top:10px; display:flex; gap:8px;">
+            <button id="mmRun" class="btn">Recommend</button>
+            <button id="mmSample" class="btn" style="background:#333">Sample Prompt</button>
+          </div>
+
+          <div style="margin-top:12px" id="mmResults"></div>
+        </div>
+
+        <!-- Other panels follow the same structure (kept concise) -->
+        <div data-panel="tour" class="panel" style="display:none">
+          <strong>Virtual Property Tour Guide</strong>
+          <p class="muted">Open any property, then ask about rooms, sunlight, nearby schools. The assistant will call your DB + GPT server.</p>
+          <label>Property ID (from listing)</label>
+          <input id="tourPropertyId" type="text" placeholder="e.g. 1" />
+          <label>Question</label>
+          <input id="tourQuestion" type="text" placeholder="How much sunlight does this balcony get?" />
+          <div style="margin-top:10px;display:flex;gap:8px"><button id="tourAsk" class="btn">Ask</button></div>
+          <div id="tourAnswer" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="predictor" class="panel" style="display:none">
+          <strong>Future Value Predictor</strong>
+          <p class="muted">Uses ML model on server. Provide property details — server returns % appreciation + explanation.</p>
+          <label>Property ID</label><input id="pvPropertyId" type="text" />
+          <label>Years</label><input id="pvYears" type="number" value="5" />
+          <div style="margin-top:10px"><button id="pvRun" class="btn">Predict</button></div>
+          <div id="pvResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="designer" class="panel" style="display:none">
+          <strong>Dream Home AI Designer</strong>
+          <p class="muted">Upload a photo — server will return edited images and suggested matching properties.</p>
+          <label>Upload image</label>
+          <input id="designerImage" type="file" accept="image/*" />
+          <label>Style</label>
+          <select id="designerStyle"><option>Modern</option><option>Minimal</option><option>Luxury</option><option>Indian Traditional</option></select>
+          <div style="margin-top:10px"><button id="designerRun" class="btn">Generate</button></div>
+          <div id="designerResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="agent" class="panel" style="display:none">
+          <strong>Conversational Agent</strong>
+          <p class="muted">Ask anything; agent will search properties + create shortlist PDF/email (server-side).</p>
+          <label>Question</label>
+          <input id="agentQuestion" type="text" placeholder="I want a 3BHK near Gurgaon under ₹1.2 Cr" />
+          <div style="margin-top:10px"><button id="agentAsk" class="btn">Ask Agent</button></div>
+          <div id="agentReply" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="relocate" class="panel" style="display:none">
+          <strong>AI Relocation Assistant</strong>
+          <label>Kids?</label>
+          <select id="relocateKids"><option value="no">No</option><option value="yes">Yes</option></select>
+          <label>Prefer</label>
+          <select id="relocateTransport"><option value="metro">Metro</option><option value="car">Car</option></select>
+          <div style="margin-top:10px"><button id="relocateRun" class="btn">Recommend Areas</button></div>
+          <div id="relocateResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="fraud" class="panel" style="display:none">
+          <strong>Fraud & Fake Listing Detector</strong>
+          <label>Property ID</label><input id="fraudPropertyId" type="text" />
+          <div style="margin-top:10px"><button id="fraudRun" class="btn">Check Trust Score</button></div>
+          <div id="fraudResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="sentiment" class="panel" style="display:none">
+          <strong>Neighborhood Sentiment</strong>
+          <label>Area (name)</label><input id="sentArea" type="text" placeholder="e.g. Golf Course Road, Gurgaon" />
+          <div style="margin-top:10px"><button id="sentRun" class="btn">Analyze</button></div>
+          <div id="sentResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="voice" class="panel" style="display:none">
+          <strong>Voice-Search</strong>
+          <p class="muted">Press the mic in header then speak: e.g. "Show 2BHK in Delhi under 60 lakh with metro"\p>
+          <div id="voiceResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="finance" class="panel" style="display:none">
+          <strong>AI Financial Planner</strong>
+          <label>Monthly income (₹)</label><input id="finIncome" type="number" />
+          <label>Savings (₹)</label><input id="finSavings" type="number" />
+          <label>EMI comfort (₹/mo)</label><input id="finEmi" type="number" />
+          <div style="margin-top:10px"><button id="finRun" class="btn">Plan My Budget</button></div>
+          <div id="finResult" style="margin-top:12px"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ai-footer">
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <small class="muted">Powered by your backend + OpenAI</small>
+        <button id="clearChat" class="btn" style="background:#333">Clear</button>
+      </div>
+    </div>
+  </aside>
+
+  <div id="aiToast" class="ai-toast" style="display:none"></div>
+
+
+  <script>
+    /* ========== CORE: calls to your backend ========== 
+       This page expects a server endpoint (never put your OpenAI key in browser JS):
+       1) POST /api/openai  -> { model, messages }     -> returns OpenAI response
+       2) POST /api/predict -> { propertyId, years }  -> returns {apprPercent, reason}
+       3) POST /api/image-edit -> formData (image, style) -> returns URLs
+       4) POST /api/verify -> { propertyId } -> returns trust score + breakdown
+       5) POST /api/sentiment -> { area } -> returns category scores
+       6) POST /api/agent_action -> { query } -> returns shortlist/pdf link
+
+       You must implement these server endpoints. Examples below call fetch('/api/…') — adapt paths as you like.
+    */
+
+    const aiToggle = document.getElementById('aiToggle');
+    const aiSidebar = document.getElementById('aiSidebar');
+    const closeAi = document.getElementById('closeAi');
+    const featureMenu = document.getElementById('featureMenu');
+
+    aiToggle.addEventListener('click', ()=>{aiSidebar.classList.add('open'); aiSidebar.setAttribute('aria-hidden','false')});
+    closeAi.addEventListener('click', ()=>{aiSidebar.classList.remove('open'); aiSidebar.setAttribute('aria-hidden','true')});
+
+    // menu switching
+    featureMenu.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      featureMenu.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      showPanel(btn.dataset.feature)
+    })
+
+    function showPanel(key){
+      document.querySelectorAll('[data-panel]').forEach(el=>el.style.display='none');
+      const panel = document.querySelector(`[data-panel="${key}"]`);
+      if(panel) panel.style.display='block';
+    }
+
+    // small toast
+    function toast(msg){ const t=document.getElementById('aiToast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',3000) }
+
+    /* ---------- helper: callOpenAI ---------- */
+    async function callOpenAI(messages, opts={model:'gpt-4o-mini'}){
+      // messages: [{role:'system'|'user'|'assistant', content:'...'}]
+      // backend expected to forward to OpenAI using YOUR server-side API KEY
+      try{
+        const res = await fetch('/api/openai',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({model:opts.model,messages})
+        });
+        if(!res.ok) throw new Error('server error');
+        return await res.json(); // expected {choices:[{message:{content:''}}]} or {reply: '...'} depending on your server
+      }catch(err){ console.error(err); throw err }
+    }
+
+    /* ---------------- Matchmaker flow ---------------- */
+    document.getElementById('mmRun').addEventListener('click', async ()=>{
+      const family = document.getElementById('mmFamily').value;
+      const commute = document.getElementById('mmCommute').value;
+      const hobbies = document.getElementById('mmHobbies').value;
+      const budget = document.getElementById('mmBudget').value;
+      const goals = document.getElementById('mmGoals').value;
+
+      const userProfile = `Family:${family}; commute:${commute}; hobbies:${hobbies}; budget:${budget}; goals:${goals}`;
+      const system = `You are a real-estate recommender. Use the site's property DB (provided separately by the server) and return 3 matching properties with 1-line reasons connecting user's life to each property (park nearby, school, commute). Return JSON array with fields id,title,reason.`;
+
+      document.getElementById('mmResults').innerHTML = '<div class="muted">Thinking…</div>';
+      try{
+        // We send user profile and ask backend to access DB — backend should call OpenAI WITH internal property list or join results.
+        const resp = await callOpenAI([{role:'system', content:system},{role:'user', content:userProfile}],{model:'gpt-4o-mini'});
+        // Example server returns {reply: '...' } or openai choice; adapt accordingly.
+        const reply = resp.reply || (resp.choices && resp.choices[0] && resp.choices[0].message.content) || JSON.stringify(resp);
+        document.getElementById('mmResults').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){ document.getElementById('mmResults').innerHTML = '<div class="muted">Error calling AI — check server logs.</div>' }
+    })
+
+    document.getElementById('mmSample').addEventListener('click', ()=>{
+      const sample = `User likes jogging, wants 2–3 bed, budget ₹80L–1.2Cr, prefers metro. Ask: Recommend top 3 properties that match this lifestyle. Explain in simple language why each is good.`;
+      document.getElementById('mmHobbies').value='jogging'; document.getElementById('mmBudget').value='10000000'; document.getElementById('mmGoals').value='own long-term'; toast('Sample injected')
+    })
+
+    /* ---------------- Virtual Tour ---------------- */
+    document.getElementById('tourAsk').addEventListener('click', async ()=>{
+      const id = document.getElementById('tourPropertyId').value;
+      const q = document.getElementById('tourQuestion').value;
+      if(!id || !q){toast('enter property id & question');return}
+      document.getElementById('tourAnswer').innerHTML = 'Thinking…';
+      try{
+        // server should fetch DB details for propertyId and send as context to OpenAI
+        const resp = await fetch('/api/openai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:`You are a tour guide that answers based on the property object passed in 'context'`},{role:'user',content:`propertyId:${id} \n question: ${q}`}], context:{propertyId:id}})})
+        const data = await resp.json();
+        const text = data.reply || (data.choices && data.choices[0] && data.choices[0].message.content) || 'No reply';
+        document.getElementById('tourAnswer').innerHTML = `<div class="ai-msg bot"><div class="bubble">${text}</div></div>`;
+      }catch(e){document.getElementById('tourAnswer').innerHTML='Error — check server.'}
+    })
+
+    /* ---------------- Predictor ---------------- */
+    document.getElementById('pvRun').addEventListener('click', async ()=>{
+      const id = document.getElementById('pvPropertyId').value; const years = +document.getElementById('pvYears').value||5;
+      if(!id){toast('enter property id');return}
+      document.getElementById('pvResult').innerHTML='Running ML model…';
+      try{
+        const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({propertyId:id,years})});
+        const j = await r.json();
+        // expected {apprPercent:28, reason:'metro coming', confidence:0.7}
+        document.getElementById('pvResult').innerHTML = `<strong>${j.apprPercent}%</strong> in ${years} years — ${j.reason || ''}`;
+      }catch(e){document.getElementById('pvResult').innerHTML='Error calling predictor';}
+    })
+
+    /* ---------------- Dream Designer ---------------- */
+    document.getElementById('designerRun').addEventListener('click', async ()=>{
+      const file = document.getElementById('designerImage').files[0]; const style=document.getElementById('designerStyle').value;
+      if(!file){toast('upload an image');return}
+      document.getElementById('designerResult').innerHTML='Uploading & generating…';
+      try{
+        const fd = new FormData(); fd.append('image', file); fd.append('style', style);
+        const r = await fetch('/api/image-edit',{method:'POST', body: fd});
+        const j = await r.json();
+        // expected {images:[url1,url2], matchedProperties:[{id,title}]}
+        document.getElementById('designerResult').innerHTML = (j.images||[]).map(u=>`<img src="${u}" style="max-width:100%;border-radius:8px;margin-bottom:8px">`).join('') + (j.matchedProperties? `<div><strong>Matching properties</strong><ul>${j.matchedProperties.map(p=>`<li>${p.title} (id:${p.id})</li>`).join('')}</ul></div>`:'');
+      }catch(e){document.getElementById('designerResult').innerHTML='Error generating images';}
+    })
+
+    /* ---------------- Conversational Agent ---------------- */
+    document.getElementById('agentAsk').addEventListener('click', async ()=>{
+      const q = document.getElementById('agentQuestion').value; if(!q){toast('ask something');return}
+      document.getElementById('agentReply').innerHTML='Asking agent…';
+      try{
+        const r = await fetch('/api/agent_action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+        const j = await r.json();
+        // expected {reply:'...',shortlistLink:'',pdfLink:''}
+        document.getElementById('agentReply').innerHTML = `<pre style="white-space:pre-wrap">${j.reply || JSON.stringify(j)}</pre>` + (j.pdfLink?`<div style="margin-top:8px"><a class="btn" href="${j.pdfLink}" target="_blank">Download Shortlist PDF</a></div>`:'');
+      }catch(e){document.getElementById('agentReply').innerHTML='Agent error';}
+    })
+
+    /* ---------------- Relocation ---------------- */
+    document.getElementById('relocateRun').addEventListener('click', async ()=>{
+      const kids=document.getElementById('relocateKids').value; const transport=document.getElementById('relocateTransport').value;
+      document.getElementById('relocateResult').innerHTML='Finding areas…';
+      try{
+        const r = await callOpenAI([{role:'system',content:'You are a relocation assistant that returns suggested neighborhoods with reasons'},{role:'user',content:`kids:${kids};transport:${transport}`}]);
+        const reply = r.reply || (r.choices && r.choices[0] && r.choices[0].message.content) || JSON.stringify(r);
+        document.getElementById('relocateResult').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){document.getElementById('relocateResult').innerHTML='Error';}
+    })
+
+    /* ---------------- Fraud Detector ---------------- */
+    document.getElementById('fraudRun').addEventListener('click', async ()=>{
+      const id=document.getElementById('fraudPropertyId').value; if(!id){toast('enter id');return}
+      document.getElementById('fraudResult').innerHTML='Checking…';
+      try{
+        const r = await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({propertyId:id})});
+        const j = await r.json(); // expected {trustScore:8.5,issues:[]}
+        document.getElementById('fraudResult').innerHTML = `<div><strong>Trust:</strong> ${j.trustScore || 'N/A'}/10</div><div>${(j.issues||[]).map(i=>`<div>- ${i}</div>`).join('')}</div>`;
+      }catch(e){document.getElementById('fraudResult').innerHTML='Error verifying';}
+    })
+
+    /* ---------------- Sentiment ---------------- */
+    document.getElementById('sentRun').addEventListener('click', async ()=>{
+      const area=document.getElementById('sentArea').value; if(!area){toast('enter area');return}
+      document.getElementById('sentResult').innerHTML='Analyzing…';
+      try{
+        const r = await fetch('/api/sentiment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({area})});
+        const j = await r.json(); // expected {safety:8.7,nightlife:6.2,schools:9.1,explanation:'...'}
+        document.getElementById('sentResult').innerHTML = `<div>Safety: ${j.safety}/10<br/>Nightlife: ${j.nightlife}/10<br/>Schools: ${j.schools}/10</div><div style="margin-top:8px">${j.explanation||''}</div>`;
+      }catch(e){document.getElementById('sentResult').innerHTML='Error';}
+    })
+
+    /* ---------------- Voice Search (web speech + server) ---------------- */
+    const voiceBtn = document.getElementById('voiceBtn');
+    let recognition=null;
+    if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRec(); recognition.lang = 'en-IN'; recognition.interimResults=false; recognition.maxAlternatives=1;
+      recognition.onresult = async (ev)=>{
+        const text = ev.results[0][0].transcript;
+        document.getElementById('voiceResult').innerHTML = `<div class="muted">You said:</div><div style="margin-top:6px">${text}</div>`;
+        // forward to agent / search
+        try{
+          const r = await fetch('/api/voice_search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:text})});
+          const j = await r.json();
+          document.getElementById('voiceResult').innerHTML += `<pre style="white-space:pre-wrap;margin-top:8px">${j.reply || JSON.stringify(j)}</pre>`;
+        }catch(e){document.getElementById('voiceResult').innerHTML += '<div class="muted">search failed</div>'}
+      }
+      recognition.onerror = (e)=>{console.error(e); toast('voice engine error')}
+    } else { voiceBtn.style.display='none' }
+
+    voiceBtn.addEventListener('click', ()=>{
+      if(!recognition){ toast('SpeechRecognition not supported on this browser'); return }
+      toast('Listening…'); recognition.start();
+    })
+
+    /* ---------------- Financial Planner ---------------- */
+    document.getElementById('finRun').addEventListener('click', async ()=>{
+      const inc=+document.getElementById('finIncome').value||0; const sav=+document.getElementById('finSavings').value||0; const emi=+document.getElementById('finEmi').value||0;
+      if(!inc){ toast('enter income'); return }
+      document.getElementById('finResult').innerHTML='Analyzing…';
+      try{
+        const messages = [{role:'system',content:'You are a helpful finance planner for property buyers in India. Provide loan options, EMI suggestions and top 3 properties under budget.'},{role:'user',content:`income:${inc}; savings:${sav};emi_cap:${emi}`}]
+        const r = await callOpenAI(messages,{model:'gpt-4o-mini'});
+        const reply = r.reply || (r.choices && r.choices[0] && r.choices[0].message.content) || JSON.stringify(r);
+        document.getElementById('finResult').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){document.getElementById('finResult').innerHTML='Error' }
+    })
+
+    // clear
+    document.getElementById('clearChat').addEventListener('click', ()=>{
+      // simply clear panels results
+      document.querySelectorAll('[data-panel] .ai-msg, [data-panel] pre, [data-panel] img').forEach(n=>n.remove());
+      ['mmResults','tourAnswer','pvResult','designerResult','agentReply','relocateResult','fraudResult','sentResult','voiceResult','finResult'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML='';})
+      toast('Cleared')
+    })
+
+    // initial show matchmaker
+    showPanel('matchmaker')
+
+    /* ========== NOTES FOR SERVER INTEGRATION (short) ==========
+       - Keep your OpenAI key on the server. Browser MUST NOT store API keys.
+       - /api/openai should accept {model, messages} and forward to OpenAI API, returning the assistant reply as JSON: {reply: '...'}
+       - For features that need property DB access (matchmaker, tour), your server should combine local DB results with OpenAI prompts for reliable answers. Example: fetch properties matching filters, then send them as json in system message for the model to reason over.
+       - Use image-edit endpoints for Dream Designer. If you prefer to call OpenAI Images APIs, do that on server and return URLs.
+       - Always sanitize user uploads and limit sizes.
+
+       Example minimal server flow (Node/Express):
+         app.post('/api/openai', async (req,res)=>{
+           const {model,messages} = req.body; // validate
+           const openaiResp = await openai.chat.completions.create({model, messages});
+           res.json({reply: openaiResp.choices[0].message.content});
+         })
+
+    */
+  </script>
+</body>
+</html>
