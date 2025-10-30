@@ -1,603 +1,3473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acres & Yards - Find Your Dream Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            position: relative;
+        }
+
+        .logo {
+            height: 100px;
+            width: 100px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #D4AF37;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #D4AF37;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        /* Profile Sidebar */
+        .profile-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            box-shadow: -3px 0 15px rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            z-index: 2000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            border-left: 2px solid #D4AF37;
+        }
+
+        .profile-sidebar.active {
+            right: 0;
+        }
+
+        .profile-content .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-content .close-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-header h2 {
+            color: #D4AF37 !important;
+        }
+
+        .profile-header p {
+            color: #D4AF37 !important;
+            opacity: 0.8;
+        }
+
+        .profile-section h3 {
+            color: #D4AF37 !important;
+        }
+
+        .detail-item {
+            background: rgba(212, 175, 55, 0.1) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .detail-item strong {
+            color: #D4AF37 !important;
+        }
+
+        .detail-item span {
+            color: #ffffff !important;
+        }
+
+        .saved-property-item {
+            background: rgba(212, 175, 55, 0.1) !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .saved-property-item h4 {
+            color: #D4AF37 !important;
+        }
+
+        .saved-property-item p {
+            color: #ffffff !important;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            background: rgb(0, 0, 0);
+            border-radius: 20px 20px 0 0;
+            min-height: calc(100vh - 80px);
+            box-shadow: 0 -5px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Homepage */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/PHOTO-2025-05-31-20-57-43.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #D4AF37;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .cta-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Property Listings */
+        .listings {
+            padding: 3rem 2rem;
+        }
+
+        .filters {
+            background: linear-gradient(45deg, #D4AF37, #D4AF37);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .filter-group input, .filter-group select {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .filter-btn {
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .property-image {
+            height: 250px;
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .save-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .property-info {
+            padding: 1.5rem;
+        }
+
+        .property-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #D4AF37;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .property-location {
+            color: #666;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* Property Detail Page */
+        .property-detail {
+            padding: 3rem 2rem;
+        }
+
+        .property-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .property-gallery {
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            height: 400px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .property-summary {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .property-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        /* Login/Register */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            padding: 2rem;
+        }
+
+        .auth-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Login Method Selection Styling */
+        .login-method-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-method-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.8rem 1rem;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .login-method-option:hover {
+            background: #e9ecef;
+            border-color: #D4AF37;
+        }
+
+        .login-method-option input[type="radio"] {
+            margin-right: 0.5rem;
+            margin-left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+        .login-method-option span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* OTP Resend Button */
+        .resend-otp-btn {
+            width: 100%;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .resend-otp-btn:hover {
+            background: #e9ecef;
+            border-color: #D4AF37;
+        }
+
+        .resend-otp-btn:disabled {
+            background: #f8f9fa;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+        /* Contact/Inquiry */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            padding: 3rem 2rem;
+        }
+
+        .contact-info {
+            background: linear-gradient(45deg, #000000, #D4AF37);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .contact-form {
+            background: #f8f9fa;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* About Us */
+        .about-container {
+            padding: 3rem 2rem;
+        }
+
+        .about-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .about-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Director Cards */
+        .director-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .director-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            max-width: 400px;
+        }
+
+        .director-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .director-image {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(45deg, #D4AF37, #D4AF37);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        /* Dropdown Navigation Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: #D4AF37;
+            font-weight: 500;
+            font-size: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .dropdown-toggle:hover {
+            color: #fff;
+        }
+
+        .dropdown-arrow, .submenu-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: #D4AF37;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu > a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            color: #D4AF37;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+            margin: 0 0.5rem;
+        }
+
+        .dropdown-submenu > a:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .submenu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            list-style: none;
+            padding: 0.5rem 0;
+            margin: 0;
+            margin-left: 5px;
+        }
+
+        .dropdown-submenu:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .dropdown-submenu:hover .submenu-arrow {
+            transform: rotate(90deg);
+        }
+
+        .submenu li a {
+            display: block;
+            padding: 0.7rem 1.2rem;
+            color: #D4AF37;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 4px;
+            margin: 0 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .submenu li a:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #fff;
+        }
+
+        /* Hidden sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* MOBILE RESPONSIVE CSS */
+        @media (max-width: 768px) {
+            /* Navigation fixes */
+            .nav-container {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                height: 60px;
+                width: 60px;
+            }
+
+            .menu-toggle {
+                display: block;
+                position: absolute;
+                right: 1rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                z-index: 999;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: left;
+                padding: 0;
+                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            }
+
+            .nav-links > li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 1rem 1.5rem;
+                color: #D4AF37;
+                font-size: 1.1rem;
+                text-decoration: none;
+            }
+
+            .nav-links a:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
+            }
+
+            /* Mobile and Desktop Login Button Styles */
+            .mobile-login-item {
+                border-top: 2px solid rgba(212, 175, 55, 0.3);
+                padding-top: 1rem;
+                margin-top: 1rem;
+            }
+
+            .mobile-login-btn {
+                display: block;
+                width: calc(100% - 3rem);
+                margin: 0 1.5rem;
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+                border-radius: 8px;
+                background: linear-gradient(45deg, #000000, #D4AF37);
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .desktop-login-btn {
+                display: none;
+            }
+
+            .login-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                margin: 1rem 1.5rem;
+                width: calc(100% - 3rem);
+                border-radius: 8px;
+            }
+
+            /* Mobile Dropdown Styles */
+            .dropdown {
+                position: relative;
+            }
+
+            .dropdown-toggle {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.5rem;
+                background: none;
+                border: none;
+                color: #D4AF37;
+                font-size: 1.1rem;
+                cursor: pointer;
+                text-align: left;
+                text-decoration: none;
+            }
+
+            .dropdown-toggle:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
+            }
+
+            .dropdown-arrow, .submenu-arrow {
+                transition: transform 0.3s ease;
+                font-size: 1rem;
+                color: #D4AF37;
+                font-weight: bold;
+            }
+
+            .dropdown.active .dropdown-arrow {
+                transform: rotate(180deg);
+            }
+
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 0, 0, 0.9);
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown.active .dropdown-menu {
+                max-height: 500px;
+            }
+
+            .dropdown-submenu {
+                position: relative;
+            }
+
+            .dropdown-submenu > a {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem 2rem;
+                color: #D4AF37;
+                text-decoration: none;
+                background: rgba(212, 175, 55, 0.05);
+                border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+                font-size: 1rem;
+            }
+
+            .dropdown-submenu > a:hover {
+                background: rgba(212, 175, 55, 0.15);
+                color: #fff;
+            }
+
+            .submenu-arrow {
+                transition: transform 0.3s ease;
+                font-size: 1rem;
+                color: #D4AF37;
+                font-weight: bold;
+            }
+
+            .dropdown-submenu.active .submenu-arrow {
+                transform: rotate(90deg);
+            }
+
+            .submenu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                background: rgba(0, 0, 0, 0.8);
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .dropdown-submenu.active .submenu {
+                max-height: 200px;
+            }
+
+            .submenu li {
+                border-bottom: 1px solid rgba(212, 175, 55, 0.05);
+            }
+
+            .submenu li:last-child {
+                border-bottom: none;
+            }
+
+            .submenu li a {
+                display: block;
+                padding: 0.7rem 3rem;
+                color: #D4AF37;
+                text-decoration: none;
+                font-size: 0.95rem;
+                background: rgba(212, 175, 55, 0.02);
+            }
+
+            .submenu li a:hover {
+                background: rgba(212, 175, 55, 0.1);
+                color: #fff;
+            }
+
+            /* Hero section mobile */
+            .hero {
+                height: 50vh;
+                border-radius: 10px 10px 0 0;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .cta-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            /* Property grid mobile fixes */
+            .property-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0;
+            }
+
+            .property-card {
+                margin: 0 auto;
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .property-image {
+                height: 200px;
+            }
+
+            .property-info {
+                padding: 1rem;
+            }
+
+            .property-price {
+                font-size: 1.4rem;
+            }
+
+            .property-title {
+                font-size: 1.1rem;
+            }
+
+            .property-details {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            /* Filter section mobile */
+            .listings {
+                padding: 2rem 1rem;
+            }
+
+            .filters {
+                margin: 0;
+                padding: 1.5rem 1rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .filter-btn {
+                width: 100%;
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+
+            /* Property detail mobile */
+            .property-detail {
+                padding: 2rem 1rem;
+            }
+
+            .property-header {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .property-gallery {
+                height: 250px;
+            }
+
+            .property-summary {
+                padding: 1.5rem 1rem;
+            }
+
+            .property-features {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            /* Contact form mobile */
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+
+            .contact-info,
+            .contact-form {
+                padding: 2rem 1.5rem;
+            }
+
+            /* About section mobile */
+            .about-container {
+                padding: 2rem 1rem;
+            }
+
+            .about-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .about-hero p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .about-card {
+                padding: 1.5rem;
+            }
+
+            /* Director section mobile */
+            .director-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .director-card {
+                max-width: 100%;
+                width: 100%;
+                padding: 2rem 1.5rem;
+            }
+
+            .director-image {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+
+            /* Auth form mobile */
+            .auth-container {
+                padding: 1rem;
+                min-height: calc(100vh - 70px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .auth-form {
+                padding: 2rem 1.5rem;
+                max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
+                box-sizing: border-box;
+            }
+
+            .auth-form h2 {
+                font-size: 1.5rem;
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                color: #555;
+                font-size: 0.9rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 0.8rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 1rem;
+                box-sizing: border-box;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #000000;
+            }
+
+            /* Mobile login method selection */
+            .login-method-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .login-method-option {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .login-method-option:hover {
+                background: #e9ecef;
+                border-color: #D4AF37;
+            }
+
+            .login-method-option input[type="radio"] {
+                width: 20px;
+                height: 20px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            .login-method-option span {
+                font-weight: 500;
+                color: #333;
+                font-size: 1rem;
+            }
+
+            /* OTP section mobile */
+            #otp-group input {
+                margin-bottom: 0.8rem;
+                text-align: center;
+                font-size: 1.2rem;
+                letter-spacing: 0.2rem;
+            }
+
+            .resend-otp-btn {
+                width: 100%;
+                padding: 0.8rem;
+                font-size: 0.9rem;
+                margin-top: 0;
+            }
+
+            .auth-btn {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+            }
+
+            /* Switch text styling */
+            .auth-form p {
+                text-align: center;
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            /* Profile sidebar mobile */
+            .profile-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .profile-sidebar.active {
+                right: 0;
+            }
+
+            /* Main content spacing */
+            main {
+                margin-top: 70px;
+            }
+
+            /* Container responsive */
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .filters {
+                padding: 1rem;
+            }
+
+            .contact-info,
+            .contact-form {
+                padding: 1.5rem 1rem;
+            }
+
+            .director-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .director-image {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Desktop view - hide mobile login, show desktop login */
+        @media (min-width: 769px) {
+            .mobile-login-item {
+                display: none;
+            }
+
+            .desktop-login-btn {
+                display: block;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" onclick="showPage('homepage')">
+                <img src="images/logo.png" alt="Company Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showPage('homepage')">Home</a></li>
+                <li class="dropdown">
+                    <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                        Projects <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                            <a href="#" onclick="toggleSubmenu(this)">Tulip<span class="submenu-arrow">▶</span></a>
+                            <ul class="submenu">
+                                <li><a href="#" onclick="showDeveloperProject(1, 1)">Tulip Crimson</a></li>
+                                <li><a href="#" onclick="showDeveloperProject(1, 2)">Tulip Monsella</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="#" onclick="toggleSubmenu(this)">Whiteland<span class="submenu-arrow">▶</span></a>
+                            <ul class="submenu">
+                                <li><a href="#" onclick="showDeveloperProject(2, 1)">Blissville</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="#" onclick="toggleSubmenu(this)">Adani<span class="submenu-arrow">▶</span></a>
+                            <ul class="submenu">
+                                <li><a href="#" onclick="showDeveloperProject(3, 1)">Samsara Vilasa</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="#" onclick="toggleSubmenu(this)">Emaar<span class="submenu-arrow">▶</span></a>
+                            <ul class="submenu">
+                                <li><a href="#" onclick="showDeveloperProject(4, 1)">Urban Ascent</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="#" onclick="toggleSubmenu(this)">Trinity<span class="submenu-arrow">▶</span></a>
+                            <ul class="submenu">
+                                <li><a href="#" onclick="showDeveloperProject(5, 1)">Sky Palazzo</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#" onclick="showPage('listings')">Properties</a></li>
+                <li><a href="#" onclick="showPage('about')">About</a></li>
+                <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+                <li class="mobile-login-item">
+                    <button class="login-btn mobile-login-btn" onclick="handleMobileLogin()">Login</button>
+                </li>
+            </ul>
+            <button class="login-btn desktop-login-btn" onclick="showPage('login')">Login</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Homepage -->
+        <section id="homepage" class="page-section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Find Your Dream Home</h1>
+                    <p>Discover the perfect property with our premium real estate services</p>
+                    <button class="cta-btn" onclick="showPage('listings')">Browse Properties</button>
+                </div>
+            </div>
+            
+            <div class="listings">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #D4AF37;">Top Upcoming Projects in Gurgaon</h2>
+                    <div class="property-grid" id="upcoming-projects">
+                        <!-- Upcoming projects will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Property Listings -->
+        <section id="listings" class="page-section">
+            <div class="listings">
+                <div class="container">
+                    <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #D4AF37;">Property Listings</h1>
+                    
+                    <div class="filters">
+                        <h3 style="margin-bottom: 1rem; color: #000000;">Filter Properties</h3>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Property Type</label>
+                                <select id="propertyType">
+                                    <option value="">All Types</option>
+                                    <option value="house">House</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="condo">Condo</option>
+                                    <option value="villa">Villa</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Min Price (Rs.)</label>
+                                <input type="number" id="minPrice" placeholder="0">
+                            </div>
+                            <div class="filter-group">
+                                <label>Max Price (Rs.)</label>
+                                <input type="number" id="maxPrice" placeholder="Any">
+                            </div>
+                            <div class="filter-group">
+                                <label>Min Size (sq ft)</label>
+                                <input type="number" id="minSize" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Bedrooms</label>
+                                <select id="bedrooms">
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                    <option value="4">4+</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Bathrooms</label>
+                                <select id="bathrooms">
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Location</label>
+                                <input type="text" id="location" placeholder="Enter city or area">
+                            </div>
+                        </div>
+                        <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+                    </div>
+
+                    <div class="property-grid" id="all-properties">
+                        <!-- All properties will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Property Detail -->
+        <section id="property-detail" class="page-section">
+            <div class="property-detail">
+                <div class="container">
+                    <button onclick="showPage('listings')" style="margin-bottom: 2rem; background: #f0f0f0; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">← Back to Listings</button>
+                    
+                    <div class="property-header">
+                        <div class="property-gallery">
+                            Property Gallery
+                        </div>
+                        <div class="property-summary" id="property-summary">
+                            <!-- Property details will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="property-features" style="display: flex; flex-direction: column; gap: 2rem;">
+                        <div class="feature-box">
+                            <h3>Property Features</h3>
+                            <ul id="property-features-list" style="margin-top: 1rem; padding-left: 1rem;">
+                                <!-- Features will be loaded here -->
+                            </ul>
+                        </div>
+                        <div class="feature-box">
+                            <h3>Contact Agent</h3>
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Agent:</strong> <span id="agent-name"></span></p>
+                                <p><strong>Phone:</strong> <span id="agent-phone"></span></p>
+                                <p><strong>Email:</strong> <span id="agent-email"></span></p>
+                                <button class="filter-btn" style="margin-top: 1rem; width: 100%;" onclick="showPage('contact')">Inquire Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login/Register -->
+        <section id="login" class="page-section">
+            <div class="auth-container">
+                <div class="auth-form">
+                    <h2 id="auth-title">Login</h2>
+                    <form id="auth-form">
+                        <!-- Name field - always visible for both login and register -->
+                        <div class="form-group" id="name-group">
+                            <label>Full Name</label>
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <!-- Login Method Selection -->
+                        <div class="form-group">
+                            <label>Choose Login Method</label>
+                            <div class="login-method-container">
+                                <label class="login-method-option">
+                                    <input type="radio" name="loginMethod" value="email" checked onchange="toggleLoginMethod()">
+                                    <span>Email</span>
+                                </label>
+                                <label class="login-method-option">
+                                    <input type="radio" name="loginMethod" value="mobile" onchange="toggleLoginMethod()">
+                                    <span>Mobile Number</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="form-group" id="email-group">
+                            <label>Email</label>
+                            <input type="email" id="email" placeholder="Enter your email">
+                        </div>
+
+                        <!-- Mobile Input -->
+                        <div class="form-group" id="mobile-group" style="display: none;">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="mobile" placeholder="Enter your mobile number">
+                        </div>
+
+                        <div class="form-group" id="otp-group" style="display: none;">
+                            <label>Enter OTP</label>
+                            <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                            <button type="button" id="resend-otp" class="resend-otp-btn" onclick="resendOTP()">Resend OTP</button>
+                            <small id="otp-timer" style="color: #666; font-size: 0.8rem;"></small>
+                            <small id="otp-sent-to" style="color: #D4AF37; font-size: 0.8rem; display: block; margin-top: 0.5rem;"></small>
+                        </div>
+                        <button type="submit" class="auth-btn" id="auth-submit">Send OTP</button>
+                    </form>
+                    <p style="text-align: center; color: #666;">
+                        <span id="auth-switch-text">New user? Just enter your details above and we'll create your account!</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Sidebar -->
+        <div id="profileSidebar" class="profile-sidebar">
+            <div class="profile-content">
+                <span class="close-btn" onclick="toggleProfileSidebar()">&times;</span>
+                
+                <!-- Profile Header with Human Icon -->
+                <div class="profile-header" style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(0,0,0,0.1);">
+                    <div class="profile-avatar" style="width: 80px; height: 80px; background: linear-gradient(45deg, #000000, #333333); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                        👤
+                    </div>
+                    <h2 style="margin: 0; color: #000; font-size: 1.5rem;">My Profile</h2>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">Welcome back!</p>
+                </div>
+
+                <!-- Profile Sections -->
+                <div class="profile-sections">
+                    <!-- Personal Details Section -->
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h3 style="color: #000; margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                            📋 Personal Details
+                        </h3>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Name:</strong> <span id="sidebar-name" style="color: #333;">-</span>
+                        </div>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Email:</strong> <span id="sidebar-email" style="color: #333;">-</span>
+                        </div>
+                        <div class="detail-item" style="margin-bottom: 0.8rem; padding: 0.5rem; background: rgba(0,0,0,0.05); border-radius: 5px;">
+                            <strong style="color: #000;">Mobile:</strong> <span id="sidebar-mobile" style="color: #333;">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Saved Properties Section -->
+                    <div class="profile-section">
+                        <h3 style="color: #000; margin-bottom: 1rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                            Saved Properties <span id="saved-count">0</span>
+                        </h3>
+                        <div id="sidebar-saved-properties" style="max-height: 300px; overflow-y: auto;">
+                            <p style="color: #666; text-align: center; padding: 1rem; font-style: italic;">No saved properties yet. Click the heart icon on any property to save it!</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="profile-actions" style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid rgba(0,0,0,0.1);">
+                        <button onclick="clearAllSavedProperties()" style="width: 100%; padding: 0.8rem; background: #dc3545; color: white; border: none; border-radius: 5px; margin-bottom: 1rem; cursor: pointer; font-weight: 500;">
+                            🗑️ Clear All Saved
+                        </button>
+                        <button onclick="logout()" style="width: 100%; padding: 0.8rem; background: linear-gradient(45deg, #000000, #333333); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;">
+                            🚪 Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact/Inquiry -->
+        <section id="contact" class="page-section">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2 style="margin-bottom: 2rem; font-size: 2.5rem;">Get In Touch</h2>
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Contact Information</h3>
+                        <p style="margin-bottom: 1rem;">📍 Gurgaon</p>
+                        <p style="margin-bottom: 1rem;">📞 1234567891</p>
+                        <p style="margin-bottom: 1rem;">✉️ xyz@acres&yards.com</p>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 1rem;">Office Hours</h3>
+                        <p style="margin-bottom: 0.5rem;">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                        <p style="margin-bottom: 0.5rem;">Saturday: 10:00 AM - 4:00 PM</p>
+                        <p>Sunday: Closed</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h2 style="margin-bottom: 2rem; color: #333;">Send Us a Message</h2>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="contactName" placeholder="Your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="contactEmail" placeholder="Your email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="contactPhone" placeholder="Your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label>Property Interest</label>
+                            <select id="propertyInterest">
+                                <option value="">Select a property type</option>
+                                <option value="buying">Buying</option>
+                                <option value="selling">Selling</option>
+                                <option value="renting">Renting</option>
+                                <option value="general">General Inquiry</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea id="contactMessage" placeholder="Tell us about your requirements..." required></textarea>
+                        </div>
+                        <button type="submit" class="auth-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us -->
+        <section id="about" class="page-section">
+            <div class="about-container">
+                <div class="container">
+                    <div class="about-hero">
+                        <h1>About Acres & Yards</h1>
+                        <p style="font-size: 1.2rem; color: #D4AF37; max-width: 600px; margin: 0 auto;">Your trusted partner in finding the perfect property. With over 21 years of experience in the real estate industry.</p>
+                    </div>
+
+                    <div class="about-content">
+                        <div class="about-card">
+                            <h3 style="color: #D4AF37; margin-bottom: 1rem;">Our Mission</h3>
+                            <p>To provide exceptional real estate services that exceed our clients' expectations and help them achieve their property dreams with integrity and professionalism.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3 style="color: #D4AF37; margin-bottom: 1rem;">Our Vision</h3>
+                            <p>To be the leading real estate agency in the region, known for our innovative approach, market expertise, and commitment to client satisfaction.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3 style="color: #D4AF37; margin-bottom: 1rem;">Our Values</h3>
+                            <p>Transparency, integrity, professionalism, and dedication to providing personalized service that builds lasting relationships with our clients.</p>
+                        </div>
+                    </div>
+
+                    <div class="director-section" style="margin-bottom: 4rem;">
+                        <h2 style="text-align: center; margin-bottom: 3rem; color: #D4AF37; font-size: 2.5rem;">Meet Our Directors</h2>
+                        
+                        <div class="director-container">
+                            <!-- First Director -->
+                            <div class="director-card">
+                                <div class="director-image">
+                                    NA
+                                </div>
+                                <h3 style="color: #D4AF37; margin-bottom: 0.5rem; font-size: 2rem;">Neha Arora</h3>
+                                <p style="color: #666; font-weight: 500; margin-bottom: 1.5rem; font-size: 1.1rem;">Founder & Managing Director</p>
+                                <p style="color: #555; line-height: 1.6; margin-bottom: 2rem; font-size: 1rem;">
+                                    With great experience in real estate, Neha founded Acres & Yards with a vision to provide exceptional property services in Gurgaon. Her expertise in market analysis, strategic planning, and client relations has made Acres & Yards a trusted name in the industry.
+                                </p>
+                                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                                    <span style="background: #f0f0f0; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #666;">Market Expert</span>
+                                    <span style="background: #f0f0f0; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #666;">Strategic Planning</span>
+                                </div>
+                            </div>
+
+                            <!-- Second Director -->
+                            <div class="director-card">
+                                <div class="director-image">
+                                    BA
+                                </div>
+                                <h3 style="color: #D4AF37; margin-bottom: 0.5rem; font-size: 2rem;">Bhavya Arora</h3>
+                                <p style="color: #666; font-weight: 500; margin-bottom: 1.5rem; font-size: 1.1rem;">Co-Founder & Director</p>
+                                <p style="color: #555; line-height: 1.6; margin-bottom: 2rem; font-size: 1rem;">
+                                    Bhavya brings extensive knowledge in property development and investment strategies. Her background in finance and construction management ensures our clients receive comprehensive solutions for all their real estate needs in the NCR region.
+                                </p>
+                                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                                    <span style="background: #f0f0f0; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #666;">Investment Expert</span>
+                                    <span style="background: #f0f0f0; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #666;">Development</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 3rem; border-radius: 20px; text-align: center;">
+                        <h2 style="margin-bottom: 2rem; color: #333;">Why Choose Us?</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                            <div>
+                                <h4 style="color: #D4AF37; margin-bottom: 0.5rem;">21+ Years Experience</h4>
+                                <p>Extensive knowledge of local markets and trends</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #D4AF37; margin-bottom: 0.5rem;">500+ Happy Clients</h4>
+                                <p>Proven track record of successful transactions</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #D4AF37; margin-bottom: 0.5rem;">24/7 Support</h4>
+                                <p>Always available to assist with your needs</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #D4AF37; margin-bottom: 0.5rem;">Expert Team</h4>
+                                <p>Certified professionals with deep market insights</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Sample property data
+        const properties = [
+            {
+                id: 1,
+                title: "Modern Apartment",
+                price: 85000000,
+                location: "Gurgaon",
+                type: "apartment",
+                bedrooms: 2,
+                bathrooms: 2,
+                size: 1200,
+                features: ["Balcony", "Gym Access", "Parking", "24/7 Security"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            },
+            {
+                id: 2,
+                title: "Luxury Family Villa",
+                price: 125000000,
+                location: "Gurgaon",
+                type: "villa",
+                bedrooms: 4,
+                bathrooms: 3,
+                size: 2800,
+                features: ["Swimming Pool", "Garden", "Garage", "Smart Home"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            },
+            {
+                id: 3,
+                title: "Cozy Studio Apartment",
+                price: 45000000,
+                location: "Gurgaon",
+                type: "apartment",
+                bedrooms: 1,
+                bathrooms: 1,
+                size: 650,
+                features: ["High Ceilings", "Exposed Brick", "Near Transit"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            },
+            {
+                id: 4,
+                title: "Spacious Family House",
+                price: 97500000,
+                location: "Gurgaon",
+                type: "house",
+                bedrooms: 3,
+                bathrooms: 2,
+                size: 2100,
+                features: ["Fireplace", "Large Yard", "Updated Kitchen", "Basement"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            },
+            {
+                id: 5,
+                title: "Penthouse Condo",
+                price: 165000000,
+                location: "Gurgaon",
+                type: "condo",
+                bedrooms: 3,
+                bathrooms: 3,
+                size: 1800,
+                features: ["City Views", "Roof Access", "Concierge", "Wine Cellar"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            },
+            {
+                id: 6,
+                title: "Charming Townhouse",
+                price: 72000000,
+                location: "Gurgaon",
+                type: "house",
+                bedrooms: 2,
+                bathrooms: 2,
+                size: 1500,
+                features: ["Historic Character", "Courtyard", "Walk to Shops"],
+                agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+            }
+        ];
+
+        // Upcoming projects data
+        const upcomingProjects = [
+            {
+                id: 1001,
+                title: "Tulip Crimson",
+                price: 43000000,
+                location: "Sector-70, Gurgaon",
+                developer: "Tulip",
+                possession: "Dec 2025",
+                bedrooms: 4,
+                bathrooms: 4,
+                size: 3090
+            },
+            {
+                id: 1002,
+                title: "Tulip Monsella", 
+                price: 100000000,
+                location: "Golf Course Road, Gurgaon",
+                developer: "Tulip",
+                possession: "Mar 2026",
+                bedrooms: 2,
+                bathrooms: 2,
+                size: 1400
+            },
+            {
+                id: 1003,
+                title: "Blissville",
+                price: 43000000,
+                location: "Sector-70, Gurgaon", 
+                developer: "Whiteland",
+                possession: "Jun 2026",
+                bedrooms: 4,
+                bathrooms: 4,
+                size: 3090
+            }
+        ];
+
+        // Developer projects data
+        const developerProjects = {
+            1: {
+                name: "Tulip",
+                projects: [
+                    { 
+                        id: 101, 
+                        name: "Tulip Crimson", 
+                        price: 43000000, 
+                        location: "Sector-70, Gurgaon", 
+                        size: 3090, 
+                        bedrooms: 4, 
+                        bathrooms: 4,
+                        about: "Luxury residential complex with modern amenities and green spaces. Strategically located with excellent connectivity to major business hubs.",
+                        totalArea: "10 acres",
+                        towers: 5,
+                        floors: 36,
+                        totalFlats: 720,
+                        flatAreas: ["3090 sq ft (4BHK)"],
+                        mapImage: "images/tulip-crimson-location-map.jpg",
+                        floorPlanImage: "images/tulip-crimson-floor-plan.jpg",
+                        brochureUrl: "images/Tulip-Crimson-Brochure.pdf"
+                    },
+                    { 
+                        id: 102, 
+                        name: "Tulip Monsella", 
+                        price: 100000000, 
+                        location: "Golf Course Road, Gurgaon", 
+                        size: 1400, 
+                        bedrooms: 2, 
+                        bathrooms: 2,
+                        about: "Contemporary apartments designed for modern living with premium finishes and world-class amenities.",
+                        totalArea: "12 acres",
+                        towers: 6,
+                        floors: 20,
+                        totalFlats: 900,
+                        flatAreas: ["1500 sq ft (3BHK)", "2200 sq ft (4BHK)", "3000 sq ft (5BHK)"],
+                        mapImage: "images/tulip-monsella-location-map.jpg",
+                        floorPlanImage: "images/tulip-monsella-floor-plan.jpg",
+                        brochureUrl: "images/Tulip-Monsella-Brochure.pdf"
+                    }
+                ]
+            },
+            2: {
+                name: "Whiteland",
+                projects: [
+                    { 
+                        id: 201, 
+                        name: "Blissville", 
+                        price: 43000000, 
+                        location: "Sector-70, Gurgaon", 
+                        size: 3090, 
+                        bedrooms: 4, 
+                        bathrooms: 4,
+                        about: "Premium lifestyle destination with world-class amenities and modern architecture.",
+                        totalArea: "15 acres",
+                        towers: 8,
+                        floors: 30,
+                        totalFlats: 1200,
+                        flatAreas: ["2500 sq ft (3BHK)", "3090 sq ft (4BHK)"],
+                        mapImage: "images/blissville-location-map.jpg",
+                        floorPlanImage: "images/blissville-floor-plan.jpg",
+                        brochureUrl: "images/Blissville-Brochure.pdf"
+                    }
+                ]
+            },
+            3: {
+                name: "Adani",
+                projects: [
+                    { 
+                        id: 301, 
+                        name: "Samsara Vilasa", 
+                        price: 65000000, 
+                        location: "Sector-63, Gurgaon", 
+                        size: 2500, 
+                        bedrooms: 3, 
+                        bathrooms: 3,
+                        about: "Luxurious living spaces with state-of-the-art facilities and prime location.",
+                        totalArea: "20 acres",
+                        towers: 10,
+                        floors: 40,
+                        totalFlats: 1500,
+                        flatAreas: ["2200 sq ft (3BHK)", "2800 sq ft (4BHK)"],
+                        mapImage: "images/samsara-vilasa-location-map.jpg",
+                        floorPlanImage: "images/samsara-vilasa-floor-plan.jpg",
+                        brochureUrl: "images/Samsara-Vilasa-Brochure.pdf"
+                    }
+                ]
+            },
+            4: {
+                name: "Emaar",
+                projects: [
+                    { 
+                        id: 401, 
+                        name: "Urban Ascent", 
+                        price: 80000000, 
+                        location: "Sector-112, Gurgaon", 
+                        size: 1800, 
+                        bedrooms: 3, 
+                        bathrooms: 2,
+                        about: "Modern urban living with contemporary design and premium amenities.",
+                        totalArea: "25 acres",
+                        towers: 12,
+                        floors: 35,
+                        totalFlats: 1800,
+                        flatAreas: ["1800 sq ft (3BHK)", "2400 sq ft (4BHK)"],
+                        mapImage: "images/urban-ascent-location-map.jpg",
+                        floorPlanImage: "images/urban-ascent-floor-plan.jpg",
+                        brochureUrl: "images/Urban-Ascent-Brochure.pdf"
+                    }
+                ]
+            },
+            5: {
+                name: "Trinity",
+                projects: [
+                    { 
+                        id: 501, 
+                        name: "Sky Palazzo", 
+                        price: 95000000, 
+                        location: "Golf Course Road, Gurgaon", 
+                        size: 2200, 
+                        bedrooms: 3, 
+                        bathrooms: 3,
+                        about: "Iconic tower offering panoramic views and luxury lifestyle amenities.",
+                        totalArea: "18 acres",
+                        towers: 6,
+                        floors: 45,
+                        totalFlats: 1080,
+                        flatAreas: ["2200 sq ft (3BHK)", "3200 sq ft (4BHK)", "4500 sq ft (5BHK)"],
+                        mapImage: "images/sky-palazzo-location-map.jpg",
+                        floorPlanImage: "images/sky-palazzo-floor-plan.jpg",
+                        brochureUrl: "images/Sky-Palazzo-Brochure.pdf"
+                    }
+                ]
+            }
+        };
+        
+        let currentUser = null;
+        let isLogin = true;
+        let filteredProperties = [...properties];
+        let otpSent = false;
+        let otpTimer = null;
+        let otpCountdown = 0;
+        let currentLoginMethod = 'email';
+        let savedProperties = []; // Array to store saved property IDs
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'homepage') {
+                loadUpcomingProjects();
+            } else if (pageId === 'listings') {
+                loadAllProperties();
+            }
+        }
+
+        // Property display functions
+        function createPropertyCard(property) {
+            const isSaved = savedProperties.includes(property.id);
+            return `
+                <div class="property-card" id="property-${property.id}">
+                    <div class="property-image">
+                        Property Image
+                        <div class="save-icon" onclick="toggleSave(${property.id}, event)">
+                            <span id="heart-${property.id}" style="color: ${isSaved ? 'red' : '#ccc'}; font-size: 20px;">&#10084;</span>
+                        </div>
+                    </div>
+                    <div class="property-info" onclick="showPropertyDetail(${property.id})">
+                        <div class="property-price">₹${(property.price / 10000000).toFixed(1)} Cr</div>
+                        <div class="property-title">${property.title}</div>
+                        <div class="property-location">📍 ${property.location}</div>
+                        <div class="property-details">
+                            <span>🛏️ ${property.bedrooms} bed</span>
+                            <span>🚿 ${property.bathrooms} bath</span>
+                            <span>📐 ${property.size} sq ft</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createUpcomingProjectCard(project) {
+            const isSaved = savedProperties.includes(project.id);
+            return `
+                <div class="property-card" onclick="showPropertyDetail(${project.id})">
+                    <div class="property-image">
+                        Project Image
+                        <div class="save-icon" onclick="toggleSave(${project.id}, event)">
+                            <span id="heart-${project.id}" style="color: ${isSaved ? 'red' : '#ccc'}; font-size: 20px;">&#10084;</span>
+                        </div>
+                    </div>
+                    <div class="property-info">
+                        <div class="property-price">₹${(project.price / 10000000).toFixed(1)} Cr</div>
+                        <div class="property-title">${project.title}</div>
+                        <div class="property-location">📍 ${project.location}</div>
+                        <div style="color: #4ba261; font-weight: 500; margin: 0.5rem 0;">
+                            By ${project.developer}
+                        </div>
+                        <div style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+                            Possession: ${project.possession}
+                        </div>
+                        <div class="property-details">
+                            <span>🛏️ ${project.bedrooms} bed</span>
+                            <span>🚿 ${project.bathrooms} bath</span>
+                            <span>📐 ${project.size} sq ft</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleSave(id, event) {
+            event.stopPropagation();
+            
+            if (!currentUser) {
+                alert('Please login to save properties');
+                showPage('login');
+                return;
+            }
+
+            const property = properties.find(p => p.id === id);
+            const upcomingProject = upcomingProjects.find(p => p.id === id);
+            const targetProperty = property || upcomingProject;
+            
+            if (!targetProperty) return;
+
+            const heart = document.getElementById(`heart-${id}`);
+            if (!heart) return;
+
+            // Toggle saved state
+            if (savedProperties.includes(id)) {
+                // Remove from saved
+                savedProperties = savedProperties.filter(savedId => savedId !== id);
+                heart.style.color = '#ccc';
+                showNotification(`${targetProperty.title} removed from saved properties`, 'info');
+            } else {
+                // Add to saved
+                savedProperties.push(id);
+                heart.style.color = 'red';
+                showNotification(`${targetProperty.title} saved to your profile!`, 'success');
+            }
+
+            // Update saved properties in profile
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+        }
+
+        function updateSavedPropertiesDisplay() {
+            const container = document.getElementById('sidebar-saved-properties');
+            if (!container) return;
+
+            if (savedProperties.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 1rem; font-style: italic;">No saved properties yet. Click the heart icon on any property to save it!</p>';
+                return;
+            }
+
+            const savedHTML = savedProperties.map(id => {
+                const property = properties.find(p => p.id === id);
+                const upcomingProject = upcomingProjects.find(p => p.id === id);
+                const targetProperty = property || upcomingProject;
+                
+                if (!targetProperty) return '';
+
+                return `
+                    <div class="saved-property-item" style="background: rgba(0,0,0,0.05); padding: 1rem; margin-bottom: 0.8rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" 
+                         onclick="showPropertyDetail(${id}); toggleProfileSidebar();"
+                         onmouseover="this.style.background='rgba(0,0,0,0.1)'" 
+                         onmouseout="this.style.background='rgba(0,0,0,0.05)'">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #000; font-size: 1rem;">${targetProperty.title}</h4>
+                                <p style="margin: 0 0 0.3rem 0; color: #666; font-size: 0.9rem;">📍 ${targetProperty.location}</p>
+                                <p style="margin: 0; color: #D4AF37; font-weight: bold; font-size: 0.9rem;">₹${(targetProperty.price / 10000000).toFixed(1)} Cr</p>
+                            </div>
+                            <button onclick="removeSavedProperty(${id}, event)" 
+                                    style="background: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;"
+                                    title="Remove from saved">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = savedHTML;
+        }
+
+        function removeSavedProperty(id, event) {
+            event.stopPropagation();
+            
+            savedProperties = savedProperties.filter(savedId => savedId !== id);
+            
+            // Update heart icon if visible
+            const heart = document.getElementById(`heart-${id}`);
+            if (heart) {
+                heart.style.color = '#ccc';
+            }
+            
+            // Update display
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+            
+            const property = properties.find(p => p.id === id) || upcomingProjects.find(p => p.id === id);
+            if (property) {
+                showNotification(`${property.title} removed from saved properties`, 'info');
+            }
+        }
+
+        function updateSavedCount() {
+            const countElement = document.getElementById('saved-count');
+            if (countElement) {
+                countElement.textContent = savedProperties.length;
+            }
+        }
+
+        function clearAllSavedProperties() {
+            if (savedProperties.length === 0) {
+                showNotification('No saved properties to clear', 'info');
+                return;
+            }
+
+            const confirmClear = confirm(`Are you sure you want to remove all ${savedProperties.length} saved properties?`);
+            if (!confirmClear) return;
+
+            // Clear all saved properties
+            savedProperties.forEach(id => {
+                const heart = document.getElementById(`heart-${id}`);
+                if (heart) {
+                    heart.style.color = '#ccc';
+                }
+            });
+
+            savedProperties = [];
+            updateSavedPropertiesDisplay();
+            updateSavedCount();
+            showNotification('All saved properties cleared', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-weight: 500;
+                max-width: 300px;
+                word-wrap: break-word;
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            // Add animation keyframes if not already added
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(notification);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function logout() {
+            const confirmLogout = confirm('Are you sure you want to logout?');
+            if (!confirmLogout) return;
+
+            currentUser = null;
+            savedProperties = [];
+            updateAuthUI();
+            toggleProfileSidebar();
+            showNotification('Logged out successfully', 'success');
+            showPage('homepage');
+        }
+
+        function loadUpcomingProjects() {
+            const projectsContainer = document.getElementById('upcoming-projects');
+            if (projectsContainer) {
+                projectsContainer.innerHTML = upcomingProjects.map(createUpcomingProjectCard).join('');
+            }
+        }
+
+        function loadUpcomingProject() {
+            loadUpcomingProjects();
+        }
+
+        function loadAllProperties() {
+            const container = document.getElementById('all-properties');
+            if (container) {
+                container.innerHTML = filteredProperties.map(createPropertyCard).join('');
+            }
+        }
+
+        // Property filtering
+        function applyFilters() {
+            const type = document.getElementById('propertyType').value;
+            const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+            const minSize = parseInt(document.getElementById('minSize').value) || 0;
+            const bedrooms = parseInt(document.getElementById('bedrooms').value) || 0;
+            const bathrooms = parseInt(document.getElementById('bathrooms').value) || 0;
+            const location = document.getElementById('location').value.toLowerCase();
+
+            filteredProperties = properties.filter(property => {
+                return (!type || property.type === type) &&
+                       (property.price >= minPrice) &&
+                       (property.price <= maxPrice) &&
+                       (property.size >= minSize) &&
+                       (property.bedrooms >= bedrooms) &&
+                       (property.bathrooms >= bathrooms) &&
+                       (!location || property.location.toLowerCase().includes(location));
+            });
+
+            loadAllProperties();
+        }
+
+        // Property detail view
+        function showPropertyDetail(propertyId) {
+            // Try to find in regular properties first
+            let property = properties.find(p => p.id === propertyId);
+            
+            // If not found, try upcoming projects
+            if (!property) {
+                property = upcomingProjects.find(p => p.id === propertyId);
+                if (property) {
+                    // Convert upcoming project to property format
+                    property = {
+                        ...property,
+                        type: "apartment",
+                        features: ["Premium Finishes", "Modern Amenities", "Security", "Parking"],
+                        agent: { name: "Bhavya Arora", phone: "1234567891", email: "xyz@acres&yards.com" }
+                    };
+                }
+            }
+            
+            if (!property) {
+                alert('Property details not found');
+                return;
+            }
+
+            document.getElementById('property-summary').innerHTML = `
+                <div class="property-price" style="font-size: 2.5rem; margin-bottom: 1rem;">₹${(property.price / 10000000).toFixed(1)} Cr</div>
+                <div class="property-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">${property.title}</div>
+                <div class="property-location" style="margin-bottom: 2rem; font-size: 1.1rem;">📍 ${property.location}</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div><strong>Type:</strong> ${property.type ? property.type.charAt(0).toUpperCase() + property.type.slice(1) : 'Apartment'}</div>
+                    <div><strong>Size:</strong> ${property.size} sq ft</div>
+                    <div><strong>Bedrooms:</strong> ${property.bedrooms}</div>
+                    <div><strong>Bathrooms:</strong> ${property.bathrooms}</div>
+                </div>
+                <button class="filter-btn" style="width: 100%;" onclick="showPage('contact')">Schedule Viewing</button>
+            `;
+
+            document.getElementById('property-features-list').innerHTML = 
+                property.features ? property.features.map(feature => `<li>${feature}</li>`).join('') : '<li>Modern Amenities</li><li>Premium Location</li>';
+
+            if (property.agent) {
+                document.getElementById('agent-name').textContent = property.agent.name;
+                document.getElementById('agent-phone').textContent = property.agent.phone;
+                document.getElementById('agent-email').textContent = property.agent.email;
+            }
+
+            showPage('property-detail');
+        }
+
+        // Developer project functions
+        function showDeveloperProject(developerId, projectIndex) {
+            const developer = developerProjects[developerId];
+            if (!developer) return;
+            
+            const project = developer.projects[projectIndex - 1];
+            if (!project) return;
+            
+            // Close mobile menu when navigating to project (only when final project is selected)
+            closeMobileMenuOnProjectSelection();
+            
+            showProjectDetails(project, developer.name);
+        }
+
+        function showProjectDetails(project, developerName) {
+            document.getElementById('property-summary').innerHTML = `
+                <div class="project-header" style="margin-bottom: 2rem;">
+                    <div class="project-price" style="font-size: 2.5rem; color: #D4AF37; margin-bottom: 0.5rem;">
+                        Starting from ₹${(project.price / 10000000).toFixed(1)} Cr
+                    </div>
+                    <div class="project-title" style="font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">
+                        ${project.name}
+                    </div>
+                    <div class="developer-name" style="font-size: 1.2rem; color: #666; margin-bottom: 0.5rem;">
+                        by ${developerName}
+                    </div>
+                    <div class="project-location" style="margin-bottom: 1rem; font-size: 1.1rem;">
+                        📍 ${project.location}
+                    </div>
+                </div>
+
+                <div class="project-about" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: #333;">About the Project</h3>
+                    <p style="line-height: 1.6; color: #555;">${project.about}</p>
+                </div>
+
+                <div class="project-specs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center;">
+                        <strong>Total Area:</strong><br>${project.totalArea}
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center;">
+                        <strong>Towers:</strong><br>${project.towers} Towers
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center;">
+                        <strong>Floors:</strong><br>${project.floors} Floors
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center;">
+                        <strong>Total Units:</strong><br>${project.totalFlats} Flats
+                    </div>
+                </div>
+
+                <div class="flat-areas" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: #333;">Available Configurations</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        ${project.flatAreas.map(area => 
+                            `<span style="background: linear-gradient(45deg, #000000, #D4AF37); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; color: #ffffff">${area}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Add project visuals and brochure download
+            document.getElementById('property-features-list').innerHTML = `
+                <div class="project-visuals" style="margin-bottom: 2rem;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem;">
+                        <div style="text-align: center;">
+                            <h4 style="margin-bottom: 1rem;">Project Images</h4>
+                            <div style="background: linear-gradient(45deg, #000000, #D4AF37); height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem;">
+                                Location Map & Floor Plans
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="filter-btn" style="background: linear-gradient(45deg, #000000, #D4AF37); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer;" 
+                                onclick="downloadBrochure('${project.id}', '${project.name}')">
+                            📄 Download Brochure
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('agent-name').textContent = "Bhavya Arora";
+            document.getElementById('agent-phone').textContent = "1234567891";
+            document.getElementById('agent-email').textContent = "xyz@acres&yards.com";
+
+            showPage('property-detail');
+        }
+
+        function downloadBrochure(projectId, projectName) {
+            // Simple brochure download simulation
+            const userDetails = prompt(`To download ${projectName} brochure, please enter your details in format: Name,Email,Phone`);
+            
+            if (userDetails) {
+                const [name, email, phone] = userDetails.split(',');
+                if (name && email && phone) {
+                    alert(`Thank you ${name}! Brochure download link has been sent to ${email}. Our team will contact you on ${phone} shortly.`);
+                } else {
+                    alert('Please enter details in correct format: Name,Email,Phone');
+                }
+            }
+        }
+
+        // Mobile dropdown functions
+        function toggleDropdown(button) {
+            const dropdown = button.closest('.dropdown');
+            const isActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Close all submenus
+            document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                s.classList.remove('active');
+            });
+            
+            // Toggle current dropdown
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        function toggleSubmenu(link) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const submenu = link.closest('.dropdown-submenu');
+            const isActive = submenu.classList.contains('active');
+            
+            // Close all other submenus in this dropdown
+            const dropdown = submenu.closest('.dropdown');
+            dropdown.querySelectorAll('.dropdown-submenu').forEach(s => {
+                if (s !== submenu) {
+                    s.classList.remove('active');
+                }
+            });
+            
+            // Toggle current submenu
+            submenu.classList.toggle('active');
+            
+            // Don't close mobile menu when toggling submenu
+            return false;
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            navLinks.classList.toggle('show');
+            
+            if (navLinks.classList.contains('show')) {
+                menuToggle.innerHTML = '&times;';
+                menuToggle.style.fontSize = '2rem';
+            } else {
+                menuToggle.innerHTML = '&#9776;';
+                menuToggle.style.fontSize = '1.5rem';
+                // Close all dropdowns when menu closes
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+                document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                    s.classList.remove('active');
+                });
+            }
+        }
+
+        // Close mobile menu when navigation item is clicked
+        function closeMobileMenuOnNavigation() {
+            if (window.innerWidth <= 768) {
+                const navLinks = document.querySelector('.nav-links');
+                const menuToggle = document.querySelector('.menu-toggle');
+                
+                if (navLinks && navLinks.classList.contains('show')) {
+                    navLinks.classList.remove('show');
+                    menuToggle.innerHTML = '&#9776;';
+                    menuToggle.style.fontSize = '1.5rem';
+                    
+                    // Close all dropdowns
+                    document.querySelectorAll('.dropdown').forEach(d => {
+                        d.classList.remove('active');
+                    });
+                    document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                        s.classList.remove('active');
+                    });
+                }
+            }
+        }
+
+        // Close mobile menu only when final project is selected
+        function closeMobileMenuOnProjectSelection() {
+            if (window.innerWidth <= 768) {
+                const navLinks = document.querySelector('.nav-links');
+                const menuToggle = document.querySelector('.menu-toggle');
+                
+                if (navLinks && navLinks.classList.contains('show')) {
+                    // Add a small delay to allow user to see the selection
+                    setTimeout(() => {
+                        navLinks.classList.remove('show');
+                        menuToggle.innerHTML = '&#9776;';
+                        menuToggle.style.fontSize = '1.5rem';
+                        
+                        // Close all dropdowns
+                        document.querySelectorAll('.dropdown').forEach(d => {
+                            d.classList.remove('active');
+                        });
+                        document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                            s.classList.remove('active');
+                        });
+                    }, 200);
+                }
+            }
+        }
+
+        // Profile sidebar toggle
+        function toggleProfileSidebar() {
+            const sidebar = document.getElementById('profileSidebar');
+            if (!sidebar) return;
+            
+            sidebar.classList.toggle('active');
+
+            if (sidebar.classList.contains('active') && currentUser) {
+                document.getElementById('sidebar-name').textContent = currentUser.name || '-';
+                document.getElementById('sidebar-email').textContent = currentUser.email || '-';
+                document.getElementById('sidebar-mobile').textContent = currentUser.mobile || '-';
+                
+                // Update saved properties display and count
+                updateSavedPropertiesDisplay();
+                updateSavedCount();
+            }
+            
+            // Add overlay for mobile
+            if (window.innerWidth <= 768) {
+                if (sidebar.classList.contains('active')) {
+                    addSidebarOverlay();
+                } else {
+                    removeSidebarOverlay();
+                }
+            }
+        }
+
+        function addSidebarOverlay() {
+            if (document.getElementById('sidebar-overlay')) return;
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'sidebar-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 1999;
+                cursor: pointer;
+            `;
+            overlay.onclick = toggleProfileSidebar;
+            document.body.appendChild(overlay);
+        }
+
+        function removeSidebarOverlay() {
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        // Authentication functions
+        function toggleLoginMethod() {
+            const emailRadio = document.querySelector('input[name="loginMethod"][value="email"]');
+            const mobileRadio = document.querySelector('input[name="loginMethod"][value="mobile"]');
+            const emailGroup = document.getElementById('email-group');
+            const mobileGroup = document.getElementById('mobile-group');
+            const otpGroup = document.getElementById('otp-group');
+
+            if (emailRadio.checked) {
+                currentLoginMethod = 'email';
+                emailGroup.style.display = 'block';
+                mobileGroup.style.display = 'none';
+                document.getElementById('email').required = true;
+                document.getElementById('mobile').required = false;
+            } else {
+                currentLoginMethod = 'mobile';
+                emailGroup.style.display = 'none';
+                mobileGroup.style.display = 'block';
+                document.getElementById('email').required = false;
+                document.getElementById('mobile').required = true;
+            }
+
+            if (otpSent) {
+                otpSent = false;
+                otpGroup.style.display = 'none';
+                document.getElementById('auth-submit').textContent = 'Send OTP';
+                clearInterval(otpTimer);
+                document.getElementById('otp-timer').textContent = '';
+                document.getElementById('otp-sent-to').textContent = '';
+            }
+        }
+
+        function sendOTP() {
+            // Validate name field first
+            const fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                alert('Please enter your full name');
+                return false;
+            }
+
+            let contactInfo = '';
+            let contactValue = '';
+            
+            if (currentLoginMethod === 'email') {
+                contactValue = document.getElementById('email').value;
+                contactInfo = 'email';
+                if (!contactValue) {
+                    alert('Please enter your email address');
+                    return false;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactValue)) {
+                    alert('Please enter a valid email address');
+                    return false;
+                }
+            } else {
+                contactValue = document.getElementById('mobile').value;
+                contactInfo = 'mobile number';
+                if (!contactValue) {
+                    alert('Please enter your mobile number');
+                    return false;
+                }
+                if (!/^[0-9]{10}$/.test(contactValue.replace(/\D/g, ''))) {
+                    alert('Please enter a valid 10-digit mobile number');
+                    return false;
+                }
+            }
+
+            const otpCode = Math.floor(100000 + Math.random() * 900000);
+            console.log(`OTP sent to ${contactInfo}: ${otpCode}`);
+            window.currentOTP = otpCode;
+            
+            document.getElementById('otp-group').style.display = 'block';
+            document.getElementById('auth-submit').textContent = 'Verify & Login';
+            
+            const maskedContact = currentLoginMethod === 'email' 
+                ? contactValue.replace(/(.{2})(.*)(@.*)/, '$1***$3')
+                : contactValue.replace(/(\d{2})(\d{6})(\d{2})/, '$1******$3');
+            
+            document.getElementById('otp-sent-to').textContent = 
+                `OTP sent to your ${contactInfo}: ${maskedContact}`;
+            
+            otpSent = true;
+            startOTPTimer();
+            
+            alert(`OTP sent to your ${contactInfo}. For demo purposes, the OTP is: ${otpCode}`);
+            return true;
+        }
+
+        function verifyOTP() {
+            const enteredOTP = document.getElementById('otp').value;
+            const fullName = document.getElementById('fullName').value.trim();
+            
+            let contactValue = '';
+            if (currentLoginMethod === 'email') {
+                contactValue = document.getElementById('email').value;
+            } else {
+                contactValue = document.getElementById('mobile').value;
+            }
+
+            if (!enteredOTP) {
+                alert('Please enter the OTP');
+                return false;
+            }
+
+            if (enteredOTP.length !== 6) {
+                alert('Please enter a valid 6-digit OTP');
+                return false;
+            }
+
+            if (parseInt(enteredOTP) === window.currentOTP) {
+                const userData = { 
+                    name: fullName, // Use the actual name entered by user
+                    loginMethod: currentLoginMethod
+                };
+                
+                if (currentLoginMethod === 'email') {
+                    userData.email = contactValue;
+                } else {
+                    userData.mobile = contactValue;
+                }
+                
+                currentUser = userData;
+                
+                alert(`Welcome ${fullName}! You have been successfully logged in.`);
+
+                updateAuthUI();
+                showPage('homepage');
+
+                // Reset form
+                document.getElementById('auth-form').reset();
+                document.getElementById('otp-group').style.display = 'none';
+                document.getElementById('otp-sent-to').textContent = '';
+                otpSent = false;
+                clearInterval(otpTimer);
+                
+                document.querySelector('input[name="loginMethod"][value="email"]').checked = true;
+                toggleLoginMethod();
+                
+                return true;
+            } else {
+                alert('Invalid OTP. Please try again.');
+                return false;
+            }
+        }
+
+        // Handle mobile login button click
+        function handleMobileLogin() {
+            if (currentUser) {
+                toggleProfileSidebar();
+            } else {
+                showPage('login');
+            }
+            // Close mobile menu
+            toggleMobileMenu();
+        }
+
+        // Update mobile login button text
+        function updateMobileAuthUI() {
+            const mobileLoginBtn = document.querySelector('.mobile-login-btn');
+            const desktopLoginBtn = document.querySelector('.desktop-login-btn');
+            
+            if (currentUser) {
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.textContent = 'My Profile';
+                    mobileLoginBtn.onclick = handleMobileLogin;
+                }
+                if (desktopLoginBtn) {
+                    desktopLoginBtn.textContent = 'My Profile';
+                    desktopLoginBtn.onclick = toggleProfileSidebar;
+                }
+            } else {
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.textContent = 'Login';
+                    mobileLoginBtn.onclick = handleMobileLogin;
+                }
+                if (desktopLoginBtn) {
+                    desktopLoginBtn.textContent = 'Login';
+                    desktopLoginBtn.onclick = () => showPage('login');
+                }
+            }
+        }
+
+        function updateAuthUI() {
+            updateMobileAuthUI();
+        }
+
+        function startOTPTimer() {
+            otpCountdown = 60;
+            const timerElement = document.getElementById('otp-timer');
+            const resendButton = document.getElementById('resend-otp');
+            
+            resendButton.disabled = true;
+            resendButton.style.opacity = '0.5';
+            resendButton.style.cursor = 'not-allowed';
+            
+            otpTimer = setInterval(() => {
+                timerElement.textContent = `Resend OTP in ${otpCountdown}s`;
+                otpCountdown--;
+                
+                if (otpCountdown < 0) {
+                    clearInterval(otpTimer);
+                    timerElement.textContent = '';
+                    resendButton.disabled = false;
+                    resendButton.style.opacity = '1';
+                    resendButton.style.cursor = 'pointer';
+                }
+            }, 1000);
+        }
+
+        function resendOTP() {
+            if (otpCountdown > 0) return;
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                alert('Please enter your name first');
+                return;
+            }
+            
+            let contactValue = '';
+            if (currentLoginMethod === 'email') {
+                contactValue = document.getElementById('email').value;
+                if (!contactValue) {
+                    alert('Please enter email address first');
+                    return;
+                }
+            } else {
+                contactValue = document.getElementById('mobile').value;
+                if (!contactValue) {
+                    alert('Please enter mobile number first');
+                    return;
+                }
+            }
+            
+            sendOTP();
+        }
+
+        function handleResize() {
+            if (window.innerWidth > 768) {
+                const navLinks = document.querySelector('.nav-links');
+                const menuToggle = document.querySelector('.menu-toggle');
+                
+                if (navLinks) {
+                    navLinks.classList.remove('show');
+                }
+                if (menuToggle) {
+                    menuToggle.innerHTML = '&#9776;';
+                    menuToggle.style.fontSize = '1.5rem';
+                }
+                
+                // Close all mobile dropdowns when switching to desktop
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+                document.querySelectorAll('.dropdown-submenu').forEach(s => {
+                    s.classList.remove('active');
+                });
+                
+                removeSidebarOverlay();
+            }
+        }
+
+        function validateContactForm() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            
+            if (!name) {
+                alert('Please enter your name');
+                return false;
+            }
+            
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address');
+                return false;
+            }
+            
+            if (!message) {
+                alert('Please enter your message');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Form submissions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize homepage
+            loadUpcomingProjects();
+            
+            // Add resize listener
+            window.addEventListener('resize', handleResize);
+            
+            // Enhanced menu toggle setup
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Close mobile menu when clicking on navigation links (but NOT dropdown toggles)
+            const allNavLinks = document.querySelectorAll('.nav-links a:not(.dropdown-toggle):not([onclick*="toggleSubmenu"])');
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // Only close menu if it's a main navigation link, not a submenu toggle
+                    if (!link.closest('.dropdown-submenu') || link.onclick && link.onclick.toString().includes('showDeveloperProject')) {
+                        closeMobileMenuOnNavigation();
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking on final project links (not developer names)
+            const projectLinks = document.querySelectorAll('.submenu a');
+            projectLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Only close menu when selecting actual projects, not when toggling submenus
+                    if (link.onclick && link.onclick.toString().includes('showDeveloperProject')) {
+                        closeMobileMenuOnProjectSelection();
+                    }
+                });
+            });
+
+            // Auth form submission
+            const authForm = document.getElementById('auth-form');
+            if (authForm) {
+                authForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (!otpSent) {
+                        sendOTP();
+                    } else {
+                        verifyOTP();
+                    }
+                });
+            }
+            
+            // Contact form submission
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (validateContactForm()) {
+                        const name = document.getElementById('contactName').value;
+                        alert(`Thank you for your inquiry, ${name}! We'll get back to you within 24 hours.`);
+                        this.reset();
+                    }
+                });
+            }
+
+            // Add touch support
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+            }
+
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Error handling
+        window.addEventListener('error', function(e) {
+            console.error('Website Error:', e.error);
+        });
+    </script>
+</body>
+</html>
+                
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Acres &amp; Yards — Find Your Dream Home</title>
-  <meta name="description" content="Acres & Yards — real estate listings and property consulting in Gurgaon. Browse featured properties, filter by price & type, contact agents." />
-  <meta name="theme-color" content="#111" />
-
-  <!-- Basic JSON-LD for Organization + sample listing structured data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"RealEstateAgent",
-    "name":"Acres & Yards",
-    "url":"https://bhavyaarora23.github.io/",
-    "logo":"images/logo.png",
-    "telephone":"+911234567891",
-    "address":{"@type":"PostalAddress","addressLocality":"Gurgaon","addressRegion":"Haryana","addressCountry":"IN"}
-  }
-  </script>
-
+  <title>Acres & Yards — AI Navigator (Integrated)</title>
   <style>
-    :root{
-      --accent:#D4AF37;
-      --bg:#0f1720;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --container:1200px;
-      --radius:12px;
-      --glass: rgba(255,255,255,0.06);
-      --trans: .28s;
-      --maxcol: 1200px;
+    /* --- Minimal reset + reuse your theme colors --- */
+    :root{--gold:#D4AF37;--black:#000;--muted:#666}
+    body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#fff}
+
+    /* Floating Assistant Button */
+    .ai-assistant-btn{
+      position:fixed; right:24px; bottom:24px; z-index:2000;
+      background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff; border:none; border-radius:999px;
+      width:64px; height:64px; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px rgba(0,0,0,0.25);
+      cursor:pointer; font-size:28px
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      line-height:1.45;color:#0b1220;background:linear-gradient(180deg,#f8fafc 0%, #ffffff 100%);
-      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-    }
+    /* Sidebar */
+    .ai-sidebar{position:fixed; right:0; top:0; height:100%; width:420px; max-width:95vw; background:#0b0b0b; color:#fff; z-index:2000; transform:translateX(110%); transition:transform .32s cubic-bezier(.2,.9,.2,1); display:flex; flex-direction:column}
+    .ai-sidebar.open{transform:translateX(0)}
+    .ai-header{display:flex; align-items:center; justify-content:space-between; padding:16px; border-bottom:1px solid rgba(255,255,255,0.04)}
+    .ai-header h3{margin:0;color:var(--gold)}
+    .ai-body{flex:1; overflow:auto; padding:12px}
+    .ai-footer{padding:12px; border-top:1px solid rgba(255,255,255,0.04)}
 
-    /* Container */
-    .wrap{max-width:var(--container);margin:0 auto;padding:18px;}
+    /* Tabs / menu for 10 features */
+    .ai-menu{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px}
+    .ai-menu button{background:rgba(212,175,55,0.08); color:var(--gold); border:1px solid rgba(212,175,55,0.06); padding:8px; border-radius:8px; cursor:pointer}
+    .ai-menu button.active{background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff}
 
-    /* NAV */
-    nav{
-      position:sticky;top:0;z-index:999;background:rgba(255,255,255,0.96);
-      border-bottom:1px solid rgba(15,23,32,0.06);backdrop-filter:blur(4px);
-    }
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:var(--container);margin:0 auto;padding:14px;}
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--accent)}
-    .brand img{width:56px;height:56px;border-radius:8px;object-fit:cover;display:block}
-    .brand h1{font-size:1.05rem;margin:0;color:#111;font-weight:700}
-    .nav-links{display:flex;gap:18px;align-items:center}
-    .nav-links a{color:#0b1220;text-decoration:none;font-weight:600}
-    .cta-login{background:linear-gradient(90deg,#111,#333);color:var(--accent);padding:8px 14px;border-radius:999px;border:0;cursor:pointer;font-weight:700}
-    .hambtn{display:none;background:none;border:0;font-size:22px;cursor:pointer}
+    /* Chat area */
+    .ai-chat{background:#0f0f10; border-radius:10px; padding:12px; min-height:260px}
+    .ai-msg{margin-bottom:10px}
+    .ai-msg.user{text-align:right}
+    .ai-msg .bubble{display:inline-block; padding:8px 12px; border-radius:12px; max-width:85%}
+    .ai-msg.user .bubble{background:linear-gradient(45deg,var(--gold),#e6c975); color:#000}
+    .ai-msg.bot .bubble{background:#121212; border:1px solid rgba(255,255,255,0.03); color:#fff}
 
-    /* HERO */
-    .hero{
-      margin-top:18px;border-radius:16px;overflow:hidden;background:#061524;color:var(--accent);
-      display:grid;grid-template-columns:1fr;align-items:center;padding:40px;
-      background-image: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.6));
-      background-blend-mode:overlay;
-      position:relative;
-    }
-    .hero .hero-inner{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:var(--container)}
-    .hero h2{font-size:2.0rem;margin:0;color:var(--accent);line-height:1.05}
-    .hero p{color:#f3f4f6;max-width:720px}
-    .hero .btn{background:var(--accent);color:#04111a;padding:10px 18px;border-radius:999px;border:0;cursor:pointer;font-weight:700}
-
-    /* FEATURED CAROUSEL */
-    .featured{margin-top:22px;border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center;overflow:hidden}
-    .carousel{display:flex;gap:12px;transition:transform .45s ease}
-    .feat-card{min-width:260px;background:linear-gradient(180deg,#fff,#fff);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(12,20,30,.06);flex-shrink:0}
-    .feat-card h4{margin:4px 0;color:#111}
-    .feat-mini{font-size:0.85rem;color:var(--muted)}
-
-    /* LISTINGS + FILTERS */
-    .section{margin:28px 0}
-    .filters{background:linear-gradient(90deg,#fff,#fff);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(12,20,30,.04);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;align-items:end}
-    .filter-group label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:6px}
-    .filter-group input,.filter-group select{width:100%;padding:9px;border-radius:8px;border:1px solid #e6e9ee;font-size:0.95rem}
-    .filter-actions{display:flex;gap:8px;align-items:center}
-    .filter-actions button{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-    .filter-apply{background:linear-gradient(90deg,#111,#333);color:var(--accent)}
-    .filter-reset{background:#f3f4f6;color:#111;border:1px solid #e6e9ee}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:18px}
-    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(12,20,30,.06);cursor:pointer;display:flex;flex-direction:column}
-    .card .image{height:190px;background:linear-gradient(135deg,#0b1220,#1b2730);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;position:relative}
-    .card img{width:100%;height:190px;object-fit:cover;display:block}
-    .fav{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.95);padding:8px;border-radius:999px;cursor:pointer}
-    .card .info{padding:14px}
-    .price{color:var(--accent);font-weight:800;font-size:1.1rem}
-    .meta{color:var(--muted);font-size:0.95rem;margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}
-    .btn-sm{padding:8px 12px;border-radius:10px;border:0;background:#eef2ff;color:#222;font-weight:700;cursor:pointer;margin-top:12px}
-
-    /* PROPERTY DETAIL */
-    .detail-wrapper{display:grid;grid-template-columns:2fr 1fr;gap:18px}
-    .gallery{height:340px;border-radius:12px;background:linear-gradient(135deg,#0b1220,#1b2730);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-    .summary{background:#fff;border-radius:12px;padding:14px;box-shadow:0 8px 20px rgba(12,20,30,.04)}
-
-    /* ABOUT / DIRECTORS / CONTACT */
-    .cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-    .about-card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(12,20,30,.04)}
-
-    /* PROFILE SIDEBAR (simple drawer) */
-    .sidebar{position:fixed;right:-420px;top:0;width:380px;height:100%;background:#041026;color:#fff;padding:18px;z-index:1200;transition:right .35s ease;box-shadow:-20px 0 60px rgba(2,6,23,0.6)}
-    .sidebar.open{right:0}
-    .sidebar h3{color:var(--accent)}
-
-    /* FOOTER */
-    footer{margin:28px 0;padding:18px;text-align:center;color:var(--muted);font-size:0.95rem}
+    /* Quick forms & small controls */
+    label{display:block; font-size:13px; color:var(--muted); margin-top:8px}
+    input[type=text], select, textarea, input[type=number]{width:100%; padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:#fff}
+    .small-row{display:flex; gap:8px}
+    .btn{background:linear-gradient(45deg,var(--black),var(--gold)); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer}
+    .muted{color:var(--muted)}
 
     /* responsive */
-    @media (max-width:900px){
-      .hero h2{font-size:1.5rem}
-      .detail-wrapper{grid-template-columns:1fr;gap:12px}
-      .nav-links{display:none}
-      .hambtn{display:block}
-      .wrap{padding:12px}
-      .featured{overflow:auto;padding-bottom:8px}
-    }
-    @media (max-width:480px){
-      .hero{padding:20px}
-      .card .image{height:160px}
-      .gallery{height:220px}
-      .sidebar{width:100%}
-    }
+    @media (max-width:600px){.ai-sidebar{width:100vw}}
 
-    /* tiny helpers */
-    .muted{color:var(--muted)}
-    .hidden{display:none}
+    /* tiny toast */
+    .ai-toast{position:fixed; right:24px; bottom:100px; background:#000; color:#fff; padding:8px 12px; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,.25)}
   </style>
 </head>
-
 <body>
-  <!-- NAV -->
-  <nav aria-label="Main navigation">
-    <div class="nav-inner wrap" role="navigation">
-      <a class="brand" href="#" onclick="showPage('homepage');return false;">
-        <img src="images/logo.png" alt="Acres & Yards Logo" onerror="this.src=''; this.style.display='none'">
-        <div>
-          <h1>Acres &amp; Yards</h1>
-          <div style="font-size:0.8rem;color:var(--muted)">Find your dream home • Gurgaon</div>
-        </div>
-      </a>
 
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="nav-links" role="menubar" aria-label="Primary">
-          <a href="#" onclick="showPage('homepage');return false;">Home</a>
-          <a href="#" onclick="showPage('listings');return false;">Properties</a>
-          <a href="#" onclick="showPage('about');return false;">About</a>
-          <a href="#" onclick="showPage('contact');return false;">Contact</a>
-        </div>
+  <!-- === Your existing site should remain as-is. This file focuses on the AI Navigator widget only. === -->
+  <!-- Floating assistant trigger -->
+  <button id="aiToggle" class="ai-assistant-btn" title="Open AI Navigator">🤖</button>
 
-        <button class="cta-login" id="openProfileBtn" title="Open profile">Profile</button>
-        <button class="hambtn" id="hambtn" aria-label="Open menu">☰</button>
+  <!-- Sidebar UI -->
+  <aside id="aiSidebar" class="ai-sidebar" aria-hidden="true">
+    <div class="ai-header">
+      <h3>AI Navigator</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="voiceBtn" class="btn" title="Voice Search">🎙️</button>
+        <button id="closeAi" class="btn" title="Close">✕</button>
       </div>
     </div>
-  </nav>
 
-  <!-- HERO -->
-  <main>
-    <section id="homepage" class="page-section wrap" aria-labelledby="hp-title">
-      <div class="hero" role="region" aria-label="Hero">
-        <div class="hero-inner">
-          <div>
-            <h2 id="hp-title">Find Your Dream Home</h2>
-            <p>Premium properties in Gurgaon &amp; NCR. Browse featured homes, filter by type and price, and connect with our team for a personalized consultation.</p>
-            <div style="margin-top:12px">
-              <button class="btn" onclick="showPage('listings')">Browse Properties</button>
-            </div>
-          </div>
-
-          <div style="min-width:260px">
-            <!-- Simple hero visual — replace with attractive image if available -->
-            <div style="background:#fff;padding:12px;border-radius:12px;box-shadow:0 8px 30px rgba(12,20,30,.06);color:#111">
-              <strong>Contact</strong>
-              <div class="muted" style="margin-top:6px">Gurgaon • +91 12345 67891</div>
-              <div style="margin-top:8px"><button class="btn" onclick="showPage('contact')">Get in touch</button></div>
-            </div>
-          </div>
-        </div>
+    <div class="ai-body">
+      <div class="ai-menu" id="featureMenu">
+        <!-- 10 features -->
+        <button data-feature="matchmaker" class="active">Matchmaker</button>
+        <button data-feature="tour">Virtual Tour</button>
+        <button data-feature="predictor">Value Predictor</button>
+        <button data-feature="designer">Dream Designer</button>
+        <button data-feature="agent">GPT Agent</button>
+        <button data-feature="relocate">Relocation</button>
+        <button data-feature="fraud">Fraud Check</button>
+        <button data-feature="sentiment">Neighborhood</button>
+        <button data-feature="voice">Voice Search</button>
+        <button data-feature="finance">FinPlanner</button>
       </div>
 
-      <!-- Featured Carousel -->
-      <div class="section">
-        <h3 style="margin-bottom:8px;color:#111">Featured Projects</h3>
-        <div class="featured">
-          <button style="background:none;border:0;cursor:pointer" onclick="carouselMove(-1)" aria-label="Prev">◀</button>
-          <div style="overflow:hidden;flex:1">
-            <div class="carousel" id="carousel">
-              <!-- cards injected by JS -->
-            </div>
+      <!-- Dynamic panel -->
+      <div id="featurePanel">
+        <!-- Default: Matchmaker -->
+        <div data-panel="matchmaker" class="panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <strong>AI Property Matchmaker</strong>
+            <small class="muted">Personalized picks</small>
           </div>
-          <button style="background:none;border:0;cursor:pointer" onclick="carouselMove(1)" aria-label="Next">▶</button>
-        </div>
-      </div>
-    </section>
 
-    <!-- LISTINGS -->
-    <section id="listings" class="page-section wrap hidden" aria-labelledby="listings-title">
-      <h2 id="listings-title" style="color:var(--accent)">Property Listings</h2>
-
-      <div class="filters" role="region" aria-label="Property filters" style="margin-top:12px">
-        <div class="filter-group">
-          <label for="propertyType">Property Type</label>
-          <select id="propertyType" aria-label="Property Type">
-            <option value="">All</option>
-            <option value="house">House</option>
-            <option value="apartment">Apartment</option>
-            <option value="condo">Condo</option>
-            <option value="villa">Villa</option>
+          <label>Family size</label>
+          <select id="mmFamily">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
           </select>
-        </div>
 
-        <div class="filter-group">
-          <label for="minPrice">Min Price (₹)</label>
-          <input id="minPrice" type="number" placeholder="0" min="0" />
-        </div>
+          <label>Commute preference</label>
+          <select id="mmCommute">
+            <option value="metro">Metro</option><option value="car">Car</option><option value="walk">Walking distance</option>
+          </select>
 
-        <div class="filter-group">
-          <label for="maxPrice">Max Price (₹)</label>
-          <input id="maxPrice" type="number" placeholder="Any" min="0" />
-        </div>
+          <label>Hobbies (comma separated)</label>
+          <input id="mmHobbies" type="text" placeholder="jogging, music, kids park" />
 
-        <div class="filter-group">
-          <label for="bedrooms">Bedrooms</label>
-          <select id="bedrooms"><option value="">Any</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select>
-        </div>
+          <label>Budget (₹)</label>
+          <input id="mmBudget" type="number" placeholder="e.g. 6000000" />
 
-        <div class="filter-group">
-          <label for="location">Location</label>
-          <input id="location" type="text" placeholder="e.g. Gurgaon" />
-        </div>
+          <label>Future goals</label>
+          <input id="mmGoals" type="text" placeholder="invest/rent-out/own long-term" />
 
-        <div class="filter-actions">
-          <button class="filter-apply" onclick="applyFilters()">Apply</button>
-          <button class="filter-reset" onclick="resetFilters()">Reset</button>
-        </div>
-      </div>
-
-      <div id="all-properties" class="grid" aria-live="polite" style="margin-top:14px">
-        <!-- JS injects property cards -->
-      </div>
-    </section>
-
-    <!-- PROPERTY DETAIL -->
-    <section id="property-detail" class="page-section wrap hidden" aria-labelledby="prop-detail-title">
-      <button onclick="showPage('listings')" style="margin-bottom:12px;padding:8px 12px;border-radius:8px;border:0;background:#f3f4f6;cursor:pointer">← Back to listings</button>
-      <div class="detail-wrapper">
-        <div>
-          <div id="detail-gallery" class="gallery" aria-hidden="false">Property Gallery</div>
-          <div style="margin-top:12px;background:#fff;border-radius:12px;padding:12px">
-            <h3 id="detail-title">Title</h3>
-            <div class="muted" id="detail-location">Location</div>
-            <p id="detail-desc" style="margin-top:8px;color:#333">Description</p>
+          <div style="margin-top:10px; display:flex; gap:8px;">
+            <button id="mmRun" class="btn">Recommend</button>
+            <button id="mmSample" class="btn" style="background:#333">Sample Prompt</button>
           </div>
+
+          <div style="margin-top:12px" id="mmResults"></div>
         </div>
 
-        <aside class="summary" id="detail-summary" aria-labelledby="detail-summary-title">
-          <h4 id="detail-summary-title">Summary</h4>
-          <div style="margin-top:8px"><strong>Price:</strong> <div id="detail-price" class="price" style="display:inline-block;margin-left:8px"></div></div>
-          <div style="margin-top:6px"><strong>Bedrooms:</strong> <span id="detail-bed"></span></div>
-          <div style="margin-top:6px"><strong>Bathrooms:</strong> <span id="detail-bath"></span></div>
-          <div style="margin-top:6px"><strong>Size:</strong> <span id="detail-size"></span> sq ft</div>
-
-          <div style="margin-top:12px">
-            <h5 style="margin-bottom:6px">Features</h5>
-            <ul id="detail-features" class="muted"></ul>
-            <h5 style="margin-top:12px;margin-bottom:6px">Agent</h5>
-            <div id="detail-agent" class="muted"></div>
-            <button class="btn-sm" onclick="showPage('contact')">Contact Agent</button>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="page-section wrap hidden" aria-labelledby="contact-title">
-      <h2 id="contact-title" style="color:var(--accent)">Get in touch</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px">
-        <div class="about-card">
-          <h3>Office</h3>
-          <p class="muted">Gurgaon • Monday - Friday: 9am - 6pm</p>
-          <p style="margin-top:8px"><strong>Phone:</strong> +91 12345 67891</p>
-          <p><strong>Email:</strong> <a href="mailto:xyz@acresandyards.com">xyz@acresandyards.com</a></p>
-          <div style="margin-top:12px">
-            <strong>Request a free valuation</strong>
-            <p class="muted" style="margin-top:6px">Send us details and we'll respond within 24 hours.</p>
-          </div>
+        <!-- Other panels follow the same structure (kept concise) -->
+        <div data-panel="tour" class="panel" style="display:none">
+          <strong>Virtual Property Tour Guide</strong>
+          <p class="muted">Open any property, then ask about rooms, sunlight, nearby schools. The assistant will call your DB + GPT server.</p>
+          <label>Property ID (from listing)</label>
+          <input id="tourPropertyId" type="text" placeholder="e.g. 1" />
+          <label>Question</label>
+          <input id="tourQuestion" type="text" placeholder="How much sunlight does this balcony get?" />
+          <div style="margin-top:10px;display:flex;gap:8px"><button id="tourAsk" class="btn">Ask</button></div>
+          <div id="tourAnswer" style="margin-top:12px"></div>
         </div>
 
-        <form id="contact-form" class="about-card" onsubmit="handleContact(event)">
-          <label class="muted">Name</label>
-          <input id="contactName" required style="width:100%;padding:9px;border-radius:8px;border:1px solid #e6e9ee;margin-top:6px" />
-          <label class="muted" style="margin-top:8px;display:block">Email</label>
-          <input id="contactEmail" type="email" required style="width:100%;padding:9px;border-radius:8px;border:1px solid #e6e9ee;margin-top:6px" />
-          <label class="muted" style="margin-top:8px;display:block">Phone</label>
-          <input id="contactPhone" style="width:100%;padding:9px;border-radius:8px;border:1px solid #e6e9ee;margin-top:6px" />
-          <label class="muted" style="margin-top:8px;display:block">Message</label>
-          <textarea id="contactMessage" required style="width:100%;padding:9px;border-radius:8px;border:1px solid #e6e9ee;margin-top:6px;min-height:100px"></textarea>
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button type="submit" class="filter-apply">Send message</button>
-            <button type="button" class="filter-reset" onclick="resetContact()">Reset</button>
-          </div>
-          <small id="contact-note" class="muted" style="display:block;margin-top:8px"></small>
-        </form>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="page-section wrap hidden" aria-labelledby="about-title">
-      <h2 id="about-title" style="color:var(--accent)">About Acres &amp; Yards</h2>
-      <div style="margin-top:12px" class="cards-row">
-        <div class="about-card">
-          <h4>Mission</h4>
-          <p class="muted">To provide exceptional real estate services that help clients confidently buy and sell property.</p>
+        <div data-panel="predictor" class="panel" style="display:none">
+          <strong>Future Value Predictor</strong>
+          <p class="muted">Uses ML model on server. Provide property details — server returns % appreciation + explanation.</p>
+          <label>Property ID</label><input id="pvPropertyId" type="text" />
+          <label>Years</label><input id="pvYears" type="number" value="5" />
+          <div style="margin-top:10px"><button id="pvRun" class="btn">Predict</button></div>
+          <div id="pvResult" style="margin-top:12px"></div>
         </div>
-        <div class="about-card">
-          <h4>Vision</h4>
-          <p class="muted">To be the most client-centered agency in the region.</p>
-        </div>
-        <div class="about-card">
-          <h4>Values</h4>
-          <p class="muted">Transparency • Integrity • Expertise</p>
-        </div>
-      </div>
 
-      <h3 style="margin-top:18px;color:var(--accent)">Meet Our Directors</h3>
-      <div class="cards-row" style="margin-top:12px">
-        <div class="about-card">
-          <div style="width:84px;height:84px;border-radius:999px;background:linear-gradient(135deg,var(--accent),#f3d88c);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-weight:800">NA</div>
-          <h4>Neha Arora</h4>
-          <p class="muted">Founder & Managing Director — market strategy & client relations.</p>
+        <div data-panel="designer" class="panel" style="display:none">
+          <strong>Dream Home AI Designer</strong>
+          <p class="muted">Upload a photo — server will return edited images and suggested matching properties.</p>
+          <label>Upload image</label>
+          <input id="designerImage" type="file" accept="image/*" />
+          <label>Style</label>
+          <select id="designerStyle"><option>Modern</option><option>Minimal</option><option>Luxury</option><option>Indian Traditional</option></select>
+          <div style="margin-top:10px"><button id="designerRun" class="btn">Generate</button></div>
+          <div id="designerResult" style="margin-top:12px"></div>
         </div>
-        <div class="about-card">
-          <div style="width:84px;height:84px;border-radius:999px;background:linear-gradient(135deg,var(--accent),#f3d88c);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-weight:800">BA</div>
-          <h4>Bhavya Arora</h4>
-          <p class="muted">Co-Founder & Director — property development & investment advisory.</p>
+
+        <div data-panel="agent" class="panel" style="display:none">
+          <strong>Conversational Agent</strong>
+          <p class="muted">Ask anything; agent will search properties + create shortlist PDF/email (server-side).</p>
+          <label>Question</label>
+          <input id="agentQuestion" type="text" placeholder="I want a 3BHK near Gurgaon under ₹1.2 Cr" />
+          <div style="margin-top:10px"><button id="agentAsk" class="btn">Ask Agent</button></div>
+          <div id="agentReply" style="margin-top:12px"></div>
         </div>
-      </div>
-    </section>
 
-    <!-- PROFILE SIDEBAR -->
-    <div id="profileSidebar" class="sidebar" aria-hidden="true">
-      <h3>My Profile</h3>
-      <div style="margin-top:8px">
-        <strong id="sidebarName">Guest</strong>
-        <div class="muted" id="sidebarEmail">Not logged in</div>
-      </div>
+        <div data-panel="relocate" class="panel" style="display:none">
+          <strong>AI Relocation Assistant</strong>
+          <label>Kids?</label>
+          <select id="relocateKids"><option value="no">No</option><option value="yes">Yes</option></select>
+          <label>Prefer</label>
+          <select id="relocateTransport"><option value="metro">Metro</option><option value="car">Car</option></select>
+          <div style="margin-top:10px"><button id="relocateRun" class="btn">Recommend Areas</button></div>
+          <div id="relocateResult" style="margin-top:12px"></div>
+        </div>
 
-      <div style="margin-top:16px">
-        <h4 style="color:var(--accent)">Saved Properties <span id="savedCount" style="font-weight:700;margin-left:6px">0</span></h4>
-        <div id="savedList" style="max-height:50vh;overflow:auto;margin-top:8px"></div>
-      </div>
+        <div data-panel="fraud" class="panel" style="display:none">
+          <strong>Fraud & Fake Listing Detector</strong>
+          <label>Property ID</label><input id="fraudPropertyId" type="text" />
+          <div style="margin-top:10px"><button id="fraudRun" class="btn">Check Trust Score</button></div>
+          <div id="fraudResult" style="margin-top:12px"></div>
+        </div>
 
-      <div style="position:absolute;bottom:18px;left:18px;right:18px">
-        <button class="filter-reset" style="width:100%" onclick="clearSaved()">Clear Saved</button>
-        <button class="filter-apply" style="width:100%;margin-top:8px" onclick="closeSidebar()">Close</button>
+        <div data-panel="sentiment" class="panel" style="display:none">
+          <strong>Neighborhood Sentiment</strong>
+          <label>Area (name)</label><input id="sentArea" type="text" placeholder="e.g. Golf Course Road, Gurgaon" />
+          <div style="margin-top:10px"><button id="sentRun" class="btn">Analyze</button></div>
+          <div id="sentResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="voice" class="panel" style="display:none">
+          <strong>Voice-Search</strong>
+          <p class="muted">Press the mic in header then speak: e.g. "Show 2BHK in Delhi under 60 lakh with metro"\p>
+          <div id="voiceResult" style="margin-top:12px"></div>
+        </div>
+
+        <div data-panel="finance" class="panel" style="display:none">
+          <strong>AI Financial Planner</strong>
+          <label>Monthly income (₹)</label><input id="finIncome" type="number" />
+          <label>Savings (₹)</label><input id="finSavings" type="number" />
+          <label>EMI comfort (₹/mo)</label><input id="finEmi" type="number" />
+          <div style="margin-top:10px"><button id="finRun" class="btn">Plan My Budget</button></div>
+          <div id="finResult" style="margin-top:12px"></div>
+        </div>
+
       </div>
     </div>
 
-    <footer class="wrap">
-      © <span id="year"></span> Acres &amp; Yards — Built with ❤️ • Demo site
-    </footer>
-  </main>
+    <div class="ai-footer">
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <small class="muted">Powered by your backend + OpenAI</small>
+        <button id="clearChat" class="btn" style="background:#333">Clear</button>
+      </div>
+    </div>
+  </aside>
 
-  <!-- SCRIPT: data + interactive behavior -->
+  <div id="aiToast" class="ai-toast" style="display:none"></div>
+
+
   <script>
-    // ---------- sample data ----------
-    const properties = [
-      { id:1, title:"Modern Apartment", price:85000000, location:"Gurgaon", type:"apartment", bedrooms:2, bathrooms:2, size:1200, features:["Balcony","Gym","Parking"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property1.jpg" },
-      { id:2, title:"Luxury Family Villa", price:125000000, location:"Gurgaon", type:"villa", bedrooms:4, bathrooms:3, size:2800, features:["Pool","Garden","Garage"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property2.jpg" },
-      { id:3, title:"Cozy Studio Apartment", price:45000000, location:"Gurgaon", type:"apartment", bedrooms:1, bathrooms:1, size:650, features:["Near Transit","High Ceilings"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property3.jpg" },
-      { id:4, title:"Spacious Family House", price:97500000, location:"Gurgaon", type:"house", bedrooms:3, bathrooms:2, size:2100, features:["Fireplace","Large Yard"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property4.jpg" },
-      { id:5, title:"Penthouse Condo", price:165000000, location:"Gurgaon", type:"condo", bedrooms:3, bathrooms:3, size:1800, features:["City Views","Concierge"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property5.jpg" },
-      { id:6, title:"Charming Townhouse", price:72000000, location:"Gurgaon", type:"house", bedrooms:2, bathrooms:2, size:1500, features:["Courtyard","Walk to Shops"], agent:{name:"Bhavya Arora",phone:"+91 12345 67891",email:"xyz@acresandyards.com"}, image:"images/property6.jpg" }
-    ];
+    /* ========== CORE: calls to your backend ========== 
+       This page expects a server endpoint (never put your OpenAI key in browser JS):
+       1) POST /api/openai  -> { model, messages }     -> returns OpenAI response
+       2) POST /api/predict -> { propertyId, years }  -> returns {apprPercent, reason}
+       3) POST /api/image-edit -> formData (image, style) -> returns URLs
+       4) POST /api/verify -> { propertyId } -> returns trust score + breakdown
+       5) POST /api/sentiment -> { area } -> returns category scores
+       6) POST /api/agent_action -> { query } -> returns shortlist/pdf link
 
-    const featured = [
-      { title:"Tulip Crimson", subtitle:"Sector-70, Gurgaon", price:43000000 },
-      { title:"Tulip Monsella", subtitle:"Golf Course Road", price:100000000 },
-      { title:"Blissville", subtitle:"Sector-70, Gurgaon", price:43000000 }
-    ];
+       You must implement these server endpoints. Examples below call fetch('/api/…') — adapt paths as you like.
+    */
 
-    // ---------- small utilities ----------
-    const $ = id => document.getElementById(id);
-    const toINR = v => "₹" + (v).toLocaleString('en-IN');
+    const aiToggle = document.getElementById('aiToggle');
+    const aiSidebar = document.getElementById('aiSidebar');
+    const closeAi = document.getElementById('closeAi');
+    const featureMenu = document.getElementById('featureMenu');
 
-    // ---------- render featured carousel ----------
-    const carouselEl = document.getElementById('carousel');
-    function renderCarousel(){
-      carouselEl.innerHTML = '';
-      featured.forEach((f, i) => {
-        const div = document.createElement('div');
-        div.className = 'feat-card';
-        div.innerHTML = `<h4>${f.title}</h4><div class="feat-mini">${f.subtitle}</div><div style="margin-top:8px;font-weight:800;color:var(--accent)">${toINR(f.price)}</div>`;
-        carouselEl.appendChild(div);
-      });
-    }
-    let carouselIndex=0;
-    function carouselMove(dir){
-      const w = carouselEl.children[0] ? (carouselEl.children[0].offsetWidth + 12) : 260;
-      carouselIndex = Math.max(0, Math.min(carouselIndex + dir, Math.max(0, featured.length - 1)));
-      carouselEl.style.transform = `translateX(-${carouselIndex * w}px)`;
+    aiToggle.addEventListener('click', ()=>{aiSidebar.classList.add('open'); aiSidebar.setAttribute('aria-hidden','false')});
+    closeAi.addEventListener('click', ()=>{aiSidebar.classList.remove('open'); aiSidebar.setAttribute('aria-hidden','true')});
+
+    // menu switching
+    featureMenu.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      featureMenu.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      showPanel(btn.dataset.feature)
+    })
+
+    function showPanel(key){
+      document.querySelectorAll('[data-panel]').forEach(el=>el.style.display='none');
+      const panel = document.querySelector(`[data-panel="${key}"]`);
+      if(panel) panel.style.display='block';
     }
 
-    // ---------- render properties ----------
-    const allPropEl = $('all-properties');
-    function createCard(prop){
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.setAttribute('role','article');
-      card.innerHTML = `
-        <div class="image" aria-hidden="true">
-          <img loading="lazy" src="${prop.image}" alt="${prop.title}" onerror="this.style.display='none'">
-          <div style="padding:12px;color:#fff;position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.4);border-radius:8px">${prop.type.toUpperCase()}</div>
-          <button class="fav" title="Save property" onclick="toggleSave(${prop.id});event.stopPropagation()">♡</button>
-        </div>
-        <div class="info" onclick="showPropertyDetail(${prop.id})" role="button" tabindex="0">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <div class="price">${toINR(prop.price)}</div>
-              <div style="font-weight:700;margin-top:6px">${prop.title}</div>
-            </div>
-            <div style="text-align:right" class="muted">${prop.location}</div>
-          </div>
-          <div class="meta">
-            <div>🛏 ${prop.bedrooms}</div>
-            <div>🛁 ${prop.bathrooms}</div>
-            <div>📐 ${prop.size} sq ft</div>
-          </div>
-        </div>
-      `;
-      return card;
+    // small toast
+    function toast(msg){ const t=document.getElementById('aiToast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',3000) }
+
+    /* ---------- helper: callOpenAI ---------- */
+    async function callOpenAI(messages, opts={model:'gpt-4o-mini'}){
+      // messages: [{role:'system'|'user'|'assistant', content:'...'}]
+      // backend expected to forward to OpenAI using YOUR server-side API KEY
+      try{
+        const res = await fetch('/api/openai',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({model:opts.model,messages})
+        });
+        if(!res.ok) throw new Error('server error');
+        return await res.json(); // expected {choices:[{message:{content:''}}]} or {reply: '...'} depending on your server
+      }catch(err){ console.error(err); throw err }
     }
 
-    function loadAllProperties(list = properties){
-      allPropEl.innerHTML = '';
-      if(!list.length){
-        allPropEl.innerHTML = '<div class="muted" style="padding:18px">No properties found.</div>';
-        return;
+    /* ---------------- Matchmaker flow ---------------- */
+    document.getElementById('mmRun').addEventListener('click', async ()=>{
+      const family = document.getElementById('mmFamily').value;
+      const commute = document.getElementById('mmCommute').value;
+      const hobbies = document.getElementById('mmHobbies').value;
+      const budget = document.getElementById('mmBudget').value;
+      const goals = document.getElementById('mmGoals').value;
+
+      const userProfile = `Family:${family}; commute:${commute}; hobbies:${hobbies}; budget:${budget}; goals:${goals}`;
+      const system = `You are a real-estate recommender. Use the site's property DB (provided separately by the server) and return 3 matching properties with 1-line reasons connecting user's life to each property (park nearby, school, commute). Return JSON array with fields id,title,reason.`;
+
+      document.getElementById('mmResults').innerHTML = '<div class="muted">Thinking…</div>';
+      try{
+        // We send user profile and ask backend to access DB — backend should call OpenAI WITH internal property list or join results.
+        const resp = await callOpenAI([{role:'system', content:system},{role:'user', content:userProfile}],{model:'gpt-4o-mini'});
+        // Example server returns {reply: '...' } or openai choice; adapt accordingly.
+        const reply = resp.reply || (resp.choices && resp.choices[0] && resp.choices[0].message.content) || JSON.stringify(resp);
+        document.getElementById('mmResults').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){ document.getElementById('mmResults').innerHTML = '<div class="muted">Error calling AI — check server logs.</div>' }
+    })
+
+    document.getElementById('mmSample').addEventListener('click', ()=>{
+      const sample = `User likes jogging, wants 2–3 bed, budget ₹80L–1.2Cr, prefers metro. Ask: Recommend top 3 properties that match this lifestyle. Explain in simple language why each is good.`;
+      document.getElementById('mmHobbies').value='jogging'; document.getElementById('mmBudget').value='10000000'; document.getElementById('mmGoals').value='own long-term'; toast('Sample injected')
+    })
+
+    /* ---------------- Virtual Tour ---------------- */
+    document.getElementById('tourAsk').addEventListener('click', async ()=>{
+      const id = document.getElementById('tourPropertyId').value;
+      const q = document.getElementById('tourQuestion').value;
+      if(!id || !q){toast('enter property id & question');return}
+      document.getElementById('tourAnswer').innerHTML = 'Thinking…';
+      try{
+        // server should fetch DB details for propertyId and send as context to OpenAI
+        const resp = await fetch('/api/openai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:`You are a tour guide that answers based on the property object passed in 'context'`},{role:'user',content:`propertyId:${id} \n question: ${q}`}], context:{propertyId:id}})})
+        const data = await resp.json();
+        const text = data.reply || (data.choices && data.choices[0] && data.choices[0].message.content) || 'No reply';
+        document.getElementById('tourAnswer').innerHTML = `<div class="ai-msg bot"><div class="bubble">${text}</div></div>`;
+      }catch(e){document.getElementById('tourAnswer').innerHTML='Error — check server.'}
+    })
+
+    /* ---------------- Predictor ---------------- */
+    document.getElementById('pvRun').addEventListener('click', async ()=>{
+      const id = document.getElementById('pvPropertyId').value; const years = +document.getElementById('pvYears').value||5;
+      if(!id){toast('enter property id');return}
+      document.getElementById('pvResult').innerHTML='Running ML model…';
+      try{
+        const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({propertyId:id,years})});
+        const j = await r.json();
+        // expected {apprPercent:28, reason:'metro coming', confidence:0.7}
+        document.getElementById('pvResult').innerHTML = `<strong>${j.apprPercent}%</strong> in ${years} years — ${j.reason || ''}`;
+      }catch(e){document.getElementById('pvResult').innerHTML='Error calling predictor';}
+    })
+
+    /* ---------------- Dream Designer ---------------- */
+    document.getElementById('designerRun').addEventListener('click', async ()=>{
+      const file = document.getElementById('designerImage').files[0]; const style=document.getElementById('designerStyle').value;
+      if(!file){toast('upload an image');return}
+      document.getElementById('designerResult').innerHTML='Uploading & generating…';
+      try{
+        const fd = new FormData(); fd.append('image', file); fd.append('style', style);
+        const r = await fetch('/api/image-edit',{method:'POST', body: fd});
+        const j = await r.json();
+        // expected {images:[url1,url2], matchedProperties:[{id,title}]}
+        document.getElementById('designerResult').innerHTML = (j.images||[]).map(u=>`<img src="${u}" style="max-width:100%;border-radius:8px;margin-bottom:8px">`).join('') + (j.matchedProperties? `<div><strong>Matching properties</strong><ul>${j.matchedProperties.map(p=>`<li>${p.title} (id:${p.id})</li>`).join('')}</ul></div>`:'');
+      }catch(e){document.getElementById('designerResult').innerHTML='Error generating images';}
+    })
+
+    /* ---------------- Conversational Agent ---------------- */
+    document.getElementById('agentAsk').addEventListener('click', async ()=>{
+      const q = document.getElementById('agentQuestion').value; if(!q){toast('ask something');return}
+      document.getElementById('agentReply').innerHTML='Asking agent…';
+      try{
+        const r = await fetch('/api/agent_action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+        const j = await r.json();
+        // expected {reply:'...',shortlistLink:'',pdfLink:''}
+        document.getElementById('agentReply').innerHTML = `<pre style="white-space:pre-wrap">${j.reply || JSON.stringify(j)}</pre>` + (j.pdfLink?`<div style="margin-top:8px"><a class="btn" href="${j.pdfLink}" target="_blank">Download Shortlist PDF</a></div>`:'');
+      }catch(e){document.getElementById('agentReply').innerHTML='Agent error';}
+    })
+
+    /* ---------------- Relocation ---------------- */
+    document.getElementById('relocateRun').addEventListener('click', async ()=>{
+      const kids=document.getElementById('relocateKids').value; const transport=document.getElementById('relocateTransport').value;
+      document.getElementById('relocateResult').innerHTML='Finding areas…';
+      try{
+        const r = await callOpenAI([{role:'system',content:'You are a relocation assistant that returns suggested neighborhoods with reasons'},{role:'user',content:`kids:${kids};transport:${transport}`}]);
+        const reply = r.reply || (r.choices && r.choices[0] && r.choices[0].message.content) || JSON.stringify(r);
+        document.getElementById('relocateResult').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){document.getElementById('relocateResult').innerHTML='Error';}
+    })
+
+    /* ---------------- Fraud Detector ---------------- */
+    document.getElementById('fraudRun').addEventListener('click', async ()=>{
+      const id=document.getElementById('fraudPropertyId').value; if(!id){toast('enter id');return}
+      document.getElementById('fraudResult').innerHTML='Checking…';
+      try{
+        const r = await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({propertyId:id})});
+        const j = await r.json(); // expected {trustScore:8.5,issues:[]}
+        document.getElementById('fraudResult').innerHTML = `<div><strong>Trust:</strong> ${j.trustScore || 'N/A'}/10</div><div>${(j.issues||[]).map(i=>`<div>- ${i}</div>`).join('')}</div>`;
+      }catch(e){document.getElementById('fraudResult').innerHTML='Error verifying';}
+    })
+
+    /* ---------------- Sentiment ---------------- */
+    document.getElementById('sentRun').addEventListener('click', async ()=>{
+      const area=document.getElementById('sentArea').value; if(!area){toast('enter area');return}
+      document.getElementById('sentResult').innerHTML='Analyzing…';
+      try{
+        const r = await fetch('/api/sentiment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({area})});
+        const j = await r.json(); // expected {safety:8.7,nightlife:6.2,schools:9.1,explanation:'...'}
+        document.getElementById('sentResult').innerHTML = `<div>Safety: ${j.safety}/10<br/>Nightlife: ${j.nightlife}/10<br/>Schools: ${j.schools}/10</div><div style="margin-top:8px">${j.explanation||''}</div>`;
+      }catch(e){document.getElementById('sentResult').innerHTML='Error';}
+    })
+
+    /* ---------------- Voice Search (web speech + server) ---------------- */
+    const voiceBtn = document.getElementById('voiceBtn');
+    let recognition=null;
+    if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRec(); recognition.lang = 'en-IN'; recognition.interimResults=false; recognition.maxAlternatives=1;
+      recognition.onresult = async (ev)=>{
+        const text = ev.results[0][0].transcript;
+        document.getElementById('voiceResult').innerHTML = `<div class="muted">You said:</div><div style="margin-top:6px">${text}</div>`;
+        // forward to agent / search
+        try{
+          const r = await fetch('/api/voice_search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({q:text})});
+          const j = await r.json();
+          document.getElementById('voiceResult').innerHTML += `<pre style="white-space:pre-wrap;margin-top:8px">${j.reply || JSON.stringify(j)}</pre>`;
+        }catch(e){document.getElementById('voiceResult').innerHTML += '<div class="muted">search failed</div>'}
       }
-      list.forEach(p => allPropEl.appendChild(createCard(p)));
-      updateSavedUI();
-    }
+      recognition.onerror = (e)=>{console.error(e); toast('voice engine error')}
+    } else { voiceBtn.style.display='none' }
 
-    // ---------- filtering ----------
-    function applyFilters(){
-      const type = $('propertyType').value;
-      const minPrice = parseInt($('minPrice').value || 0);
-      const maxPrice = parseInt($('maxPrice').value || Infinity);
-      const beds = parseInt($('bedrooms').value || 0);
-      const loc = $('location').value.trim().toLowerCase();
+    voiceBtn.addEventListener('click', ()=>{
+      if(!recognition){ toast('SpeechRecognition not supported on this browser'); return }
+      toast('Listening…'); recognition.start();
+    })
 
-      const filtered = properties.filter(p => {
-        if(type && p.type !== type) return false;
-        if(p.price < minPrice) return false;
-        if(maxPrice !== Infinity && p.price > maxPrice) return false;
-        if(beds && p.bedrooms < beds) return false;
-        if(loc && !p.location.toLowerCase().includes(loc)) return false;
-        return true;
-      });
+    /* ---------------- Financial Planner ---------------- */
+    document.getElementById('finRun').addEventListener('click', async ()=>{
+      const inc=+document.getElementById('finIncome').value||0; const sav=+document.getElementById('finSavings').value||0; const emi=+document.getElementById('finEmi').value||0;
+      if(!inc){ toast('enter income'); return }
+      document.getElementById('finResult').innerHTML='Analyzing…';
+      try{
+        const messages = [{role:'system',content:'You are a helpful finance planner for property buyers in India. Provide loan options, EMI suggestions and top 3 properties under budget.'},{role:'user',content:`income:${inc}; savings:${sav};emi_cap:${emi}`}]
+        const r = await callOpenAI(messages,{model:'gpt-4o-mini'});
+        const reply = r.reply || (r.choices && r.choices[0] && r.choices[0].message.content) || JSON.stringify(r);
+        document.getElementById('finResult').innerHTML = `<pre style="white-space:pre-wrap">${reply}</pre>`;
+      }catch(e){document.getElementById('finResult').innerHTML='Error' }
+    })
 
-      loadAllProperties(filtered);
-    }
+    // clear
+    document.getElementById('clearChat').addEventListener('click', ()=>{
+      // simply clear panels results
+      document.querySelectorAll('[data-panel] .ai-msg, [data-panel] pre, [data-panel] img').forEach(n=>n.remove());
+      ['mmResults','tourAnswer','pvResult','designerResult','agentReply','relocateResult','fraudResult','sentResult','voiceResult','finResult'].forEach(id=>{const el=document.getElementById(id); if(el) el.innerHTML='';})
+      toast('Cleared')
+    })
 
-    function resetFilters(){
-      $('propertyType').value='';
-      $('minPrice').value='';
-      $('maxPrice').value='';
-      $('bedrooms').value='';
-      $('location').value='';
-      loadAllProperties();
-    }
+    // initial show matchmaker
+    showPanel('matchmaker')
 
-    // ---------- saved properties (localStorage) ----------
-    let saved = JSON.parse(localStorage.getItem('savedProps')||'[]');
-    function toggleSave(id){
-      const idx = saved.indexOf(id);
-      if(idx>=0) saved.splice(idx,1);
-      else saved.push(id);
-      localStorage.setItem('savedProps', JSON.stringify(saved));
-      updateSavedUI();
-    }
-    function updateSavedUI(){
-      document.querySelectorAll('.fav').forEach(btn=>{
-        const onclick = btn.getAttribute('onclick') || '';
-        const idMatch = onclick.match(/toggleSave\((\d+)/);
-        if(!idMatch) return;
-        const id = Number(idMatch[1]);
-        btn.innerText = saved.includes(id) ? '❤' : '♡';
-      });
+    /* ========== NOTES FOR SERVER INTEGRATION (short) ==========
+       - Keep your OpenAI key on the server. Browser MUST NOT store API keys.
+       - /api/openai should accept {model, messages} and forward to OpenAI API, returning the assistant reply as JSON: {reply: '...'}
+       - For features that need property DB access (matchmaker, tour), your server should combine local DB results with OpenAI prompts for reliable answers. Example: fetch properties matching filters, then send them as json in system message for the model to reason over.
+       - Use image-edit endpoints for Dream Designer. If you prefer to call OpenAI Images APIs, do that on server and return URLs.
+       - Always sanitize user uploads and limit sizes.
 
-      $('savedCount').innerText = saved.length;
-      const savedList = $('savedList');
-      savedList.innerHTML = '';
-      if(!saved.length){
-        savedList.innerHTML = '<div class="muted">No saved properties yet.</div>';
-        return;
-      }
-      saved.forEach(id=>{
-        const p = properties.find(x=>x.id===id);
-        if(!p) return;
-        const div = document.createElement('div');
-        div.style.padding='8px 0';
-        div.innerHTML = `<strong>${p.title}</strong><div class="muted">${toINR(p.price)} • ${p.location}</div>`;
-        savedList.appendChild(div);
-      });
-    }
-    function clearSaved(){ saved=[]; localStorage.setItem('savedProps',JSON.stringify(saved)); updateSavedUI(); }
+       Example minimal server flow (Node/Express):
+         app.post('/api/openai', async (req,res)=>{
+           const {model,messages} = req.body; // validate
+           const openaiResp = await openai.chat.completions.create({model, messages});
+           res.json({reply: openaiResp.choices[0].message.content});
+         })
 
-    // ---------- property detail ----------
-    function showPropertyDetail(id){
-      const p = properties.find(x=>x.id===id);
-      if(!p) return;
-      showPage('property-detail');
-      $('detail-title').innerText = p.title;
-      $('detail-location').innerText = p.location;
-      $('detail-desc').innerText = p.title + ' — ' + (p.features.slice(0,4).join(', '));
-      $('detail-price').innerText = toINR(p.price);
-      $('detail-bed').innerText = p.bedrooms;
-      $('detail-bath').innerText = p.bathrooms;
-      $('detail-size').innerText = p.size;
-      $('detail-features').innerHTML = p.features.map(f=>`<li>${f}</li>`).join('');
-      $('detail-agent').innerHTML = `${p.agent.name} • <a href="mailto:${p.agent.email}">${p.agent.email}</a> • ${p.agent.phone}`;
-      // gallery fallback
-      const gallery = $('detail-gallery');
-      gallery.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = p.image || '';
-      img.alt = p.title;
-      img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover'; img.loading='lazy';
-      img.onerror = ()=> { gallery.innerHTML = `<div style="padding:18px">Image not available</div>`; };
-      gallery.appendChild(img);
-    }
-
-    // ---------- simple page nav ----------
-    function showPage(id){
-      document.querySelectorAll('.page-section').forEach(s=>s.classList.add('hidden'));
-      const el = document.getElementById(id);
-      if(el) el.classList.remove('hidden');
-      // small UX: scroll top of main
-      window.scrollTo({top:0,behavior:'smooth'});
-      // special actions
-      if(id==='listings') loadAllProperties();
-    }
-
-    // ---------- contact form (client-side stub) ----------
-    function handleContact(e){
-      e.preventDefault();
-      const name = $('contactName').value.trim();
-      const email = $('contactEmail').value.trim();
-      const phone = $('contactPhone').value.trim();
-      const msg = $('contactMessage').value.trim();
-      // For demo: show confirmation and clear; production: wire to Formspree/Netlify or your backend
-      $('contact-note').innerText = 'Thanks ' + name + '! Message recorded (demo). To send live, connect Formspree or your backend.';
-      // reset
-      setTimeout(()=>{ $('contact-form').reset(); },1200);
-    }
-    function resetContact(){ document.getElementById('contact-form').reset(); $('contact-note').innerText=''; }
-
-    // ---------- profile sidebar controls ----------
-    const sidebar = $('profileSidebar');
-    $('openProfileBtn').addEventListener('click', ()=>{ sidebar.classList.add('open'); sidebar.setAttribute('aria-hidden','false'); updateSavedUI(); });
-    function closeSidebar(){ sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); }
-    document.addEventListener('keydown', e => { if(e.key==='Escape') closeSidebar(); });
-
-    // ---------- mobile menu (basic) ----------
-    const hambtn = $('hambtn');
-    hambtn.addEventListener('click', ()=> {
-      const links = document.querySelector('.nav-links');
-      links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.background = 'transparent';
-    });
-
-    // ---------- init ----------
-    function init(){
-      renderCarousel();
-      loadAllProperties();
-      updateSavedUI();
-      document.getElementById('year').innerText = new Date().getFullYear();
-    }
-    init();
-
-    // Expose small functions for inline buttons
-    window.applyFilters = applyFilters;
-    window.resetFilters = resetFilters;
-    window.showPage = showPage;
-    window.toggleSave = toggleSave;
-    window.showPropertyDetail = showPropertyDetail;
-    window.clearSaved = clearSaved;
-    window.closeSidebar = closeSidebar;
-    window.carouselMove = carouselMove;
+    */
   </script>
 </body>
 </html>
